@@ -1,4 +1,4 @@
-package com.entity.system;
+package com.entity.admin;
 
 public class Organisation {
 }
