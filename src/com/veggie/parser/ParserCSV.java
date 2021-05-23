@@ -119,7 +119,7 @@ public class ParserCSV {
         String fileName = new File("files/testData.csv").getAbsolutePath();
         System.out.println(fileName);
         parseDataFromCSVFile(fileName);
-
+        /*@ToDo Hyperlink GPS Coordinates*/
 
 //        try (CSVReader reader = new CSVReader(new FileReader(fileName))) {
 //            List<String[]> r = reader.readAll();
