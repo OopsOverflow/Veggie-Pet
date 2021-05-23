@@ -49,4 +49,11 @@ public class Tree {
         return treeSTB.toString();
     }
 
+    public static void main(String[] args){
+        Tree t = new Tree(147179, "Marronnier", 150, 15, "hippocastanum",
+                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
+                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
+        System.out.println(t.toString());
+    }
+
 }
