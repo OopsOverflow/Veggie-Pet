@@ -19,11 +19,13 @@ public class Tree {
     private String address;
     private Float[] GPS;
     private boolean remarkable;
-    private ArrayList<Report> reportHistory = new ArrayList<>();
+    private ArrayList<Report> listReport;
 
+
+    // Constructor
     public Tree(Integer treeID, String commonName, Integer circumference, Integer height, String specie,
-                    String genre, String developmentStage, String address,
-                        Float[] GPS, boolean remarkable) {
+                String genre, String developmentStage, String address,
+                Float[] GPS, boolean remarkable) {
         this.treeID = treeID;
         this.commonName = commonName;
         this.circumference = circumference;
@@ -34,6 +36,11 @@ public class Tree {
         this.address = address;
         this.GPS = GPS;
         this.remarkable = remarkable;
+    }
+
+    // Getter
+    public Integer getTreeID() {
+        return treeID;
     }
 
     @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
@@ -51,10 +58,6 @@ public class Tree {
 
 
         return treeSTB.toString();
-    }
-
-    public boolean addVisitReport(Report report){
-
     }
 
     public static void main(String[] args){
