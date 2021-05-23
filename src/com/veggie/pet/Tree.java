@@ -1,7 +1,10 @@
 package com.veggie.pet;
 
 import com.opencsv.bean.CsvBindByName;
+import com.system.Report;
 import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
 
 
 public class Tree {
@@ -16,10 +19,13 @@ public class Tree {
     private String address;
     private Float[] GPS;
     private boolean remarkable;
+    private ArrayList<Report> listReport;
 
+
+    // Constructor
     public Tree(Integer treeID, String commonName, Integer circumference, Integer height, String specie,
-                    String genre, String developmentStage, String address,
-                        Float[] GPS, boolean remarkable) {
+                String genre, String developmentStage, String address,
+                Float[] GPS, boolean remarkable) {
         this.treeID = treeID;
         this.commonName = commonName;
         this.circumference = circumference;
@@ -30,6 +36,11 @@ public class Tree {
         this.address = address;
         this.GPS = GPS;
         this.remarkable = remarkable;
+    }
+
+    // Getter
+    public Integer getTreeID() {
+        return treeID;
     }
 
     @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
