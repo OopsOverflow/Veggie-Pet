@@ -35,7 +35,7 @@ public class Tree {
     @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
     @Override
     public String toString(){
-        StringBuilder treeSTB = new StringBuilder(String.format("[Tree %d NFO]\n", this.treeID));
+        StringBuilder treeSTB = new StringBuilder(String.format("[Tree %d INFO]\n", this.treeID));
         treeSTB.append("\tGenre : \t" + genre + "\n");
         treeSTB.append("\tSpecie :\t" + specie + "\n");
         treeSTB.append("\tHeight (Meters) : \t" + height + "\n");
