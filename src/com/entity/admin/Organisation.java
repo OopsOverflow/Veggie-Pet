@@ -1,17 +1,18 @@
 package com.entity.admin;
 
 import com.entity.Donor;
-import com.entity.entity;
 import com.entity.person.Member;
+import com.system.Report;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 
-public class Organisation extends entity {
+public class Organisation{
+    private String name;
     private Float budget;
     private static int numMembers = 0;
     ArrayList<Donor> donorsList;
@@ -19,7 +20,7 @@ public class Organisation extends entity {
 
 
     public Organisation(String name, Float budget, ArrayList<Donor> donorsList, Member... members) {
-        super(name);
+        this.name = name;
         this.budget = budget;
         this.donorsList = donorsList;
         for (Member m : members){
@@ -28,7 +29,7 @@ public class Organisation extends entity {
     }
 
     public Organisation(String name, Float budget, ArrayList<Donor> donorsList, ArrayList<Member> members) {
-        super(name);
+        this.name = name;
         this.budget = budget;
         this.donorsList = donorsList;
         for (Member m : members){
@@ -37,12 +38,12 @@ public class Organisation extends entity {
     }
 
     public Organisation(String name, Float budget) {
-        super(name);
+        this.name = name;
         this.budget = budget;
     }
 
     public Organisation(String name, ArrayList<Donor> donorsList, Member ...members) {
-        super(name);
+        this.name = name;
         this.donorsList = donorsList;
         for (Member m : members){
             membersList.add(new MutablePair<>(m, ++numMembers));
@@ -50,12 +51,17 @@ public class Organisation extends entity {
     }
 
     public Organisation(String name, Float budget, Member ... members) {
-        super(name);
+        this.name = name;
         this.budget = budget;
         for (Member m : members){
             membersList.add(new MutablePair<>(m, ++numMembers));
         }
+
     }
+
+    /**@TODO Ficher Exercice Budgétaire
+     * @TODO Fichier Exercice chaque année
+     */
 
     // Getters & Setters
 
@@ -121,9 +127,13 @@ public class Organisation extends entity {
         return false;
     }
 
-//    public boolean askForDonations(){
-////        et qui peuvent ^etre de dierentes natures (ex. services municipaux, entreprises, associations, individus),
-////        mais qui doivent tous pouvoir recevoir une demande ecrite de subvention/don emanant de l'association et,
+    public void askForDonations(){
+//        et qui peuvent ^etre de dierentes natures (ex. services municipaux, entreprises, associations, individus),
+//        mais qui doivent tous pouvoir recevoir une demande ecrite de subvention/don emanant de l'association et,
+
+    }
+
+//    private String getRecord() {
 //
 //    }
 //
@@ -162,7 +172,7 @@ public class Organisation extends entity {
         Member m1 = new Member("Houssem", "Mahmoud", new Date(1998,04,30), "Somewhere not far from Tunis",
                 new Date(2021,05,23), false, 5000);
 
-        Member m2 = new Member("Esteban", "Neraudau", new Date(1998,04,30), "Somewhere not far from Tunis",
+        Member m2 = new Member("Esteban", "Neraudau", new Date(2001,10,29), "Antony",
                 new Date(2021,05,23), false, 5000);
 
         MutablePair<Member, Integer> pair = new MutablePair<>(m1,100);

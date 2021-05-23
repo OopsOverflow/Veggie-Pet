@@ -1,9 +1,11 @@
 package com.entity;
 
-public class Donor extends entity{
+public class Donor{
+    private String name;
+    protected StringBuilder letterBox = new StringBuilder();
 
     public Donor(String name) {
-        super(name);
+        this.name = name;
     }
 
     public void donate(float amount){
