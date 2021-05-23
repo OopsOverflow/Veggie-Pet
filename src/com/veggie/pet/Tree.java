@@ -1,7 +1,10 @@
 package com.veggie.pet;
 
 import com.opencsv.bean.CsvBindByName;
+import com.system.Report;
 import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
 
 
 public class Tree {
@@ -16,6 +19,7 @@ public class Tree {
     private String address;
     private Float[] GPS;
     private boolean remarkable;
+    private ArrayList<Report> reportHistory = new ArrayList<>();
 
     public Tree(Integer treeID, String commonName, Integer circumference, Integer height, String specie,
                     String genre, String developmentStage, String address,
@@ -47,6 +51,10 @@ public class Tree {
 
 
         return treeSTB.toString();
+    }
+
+    public boolean addVisitReport(Report report){
+
     }
 
     public static void main(String[] args){

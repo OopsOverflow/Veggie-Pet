@@ -3,9 +3,8 @@ package com.entity.person;
 import com.entity.admin.Organisation;
 import com.system.Report;
 import com.veggie.pet.Tree;
-import javafx.util.Pair;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.omg.CORBA.Current;
+
 
 import java.sql.Array;
 import java.time.LocalDate;

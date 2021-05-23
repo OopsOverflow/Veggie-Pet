@@ -1,10 +1,9 @@
 package com.entity;
 
-public class Donor {
-    private String Name;
+public class Donor extends entity{
 
     public Donor(String name) {
-        Name = name;
+        super(name);
     }
 
     public void donate(float amount){
