@@ -7,9 +7,13 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.io.File;
 
 public class Organisation{
     private String name;
@@ -17,7 +21,7 @@ public class Organisation{
     private static int numMembers = 0;
     ArrayList<Donor> donorsList;
     ArrayList<MutablePair<Member, Integer>> membersList = new ArrayList<>();
-
+    File financialRecord = createFile(this.getName() + "FinancialRecord");
 
     public Organisation(String name, Float budget, ArrayList<Donor> donorsList, Member... members) {
         this.name = name;
@@ -63,6 +67,20 @@ public class Organisation{
      * @TODO Fichier Exercice chaque année
      */
 
+    private File createFile(String fileName) {
+        try {
+            File myObj = new File(fileName + ".txt");
+            if (myObj.createNewFile()) {
+                return myObj;
+            } else {
+                System.err.println("File already exists.");
+                return this.financialRecord;
+            }
+        } catch (IOException e) {
+            System.err.println("An error occurred.");
+            return this.financialRecord;
+        }
+    }
     // Getters & Setters
 
 
@@ -161,11 +179,29 @@ public class Organisation{
 ////        une synthese des activites pour l'exercice precedent.
 //    }
 //
-//    void payfacture(){
-////        Le type de compte en banque de l'association ne lui
-////        permettant d'avoir un solde negatif, un paiement ne pourra ^etre eectue que si la somme correspondante
-////        existe bien sur le compte bancaire.
-//    }
+    void payBill(float amount){
+//        Le type de compte en banque de l'association ne lui
+//        permettant d'avoir un solde negatif, un paiement ne pourra ^etre eectue que si la somme correspondante
+//        existe bien sur le compte bancaire.
+        if (budget - amount > 0){
+            budget -= amount;
+            try(FileWriter writer = new FileWriter(financialRecord.getName())){
+                writer.write(String.format("[%s]NEW FINICIAL OPERATION==========\n",this.name));
+                writer.write("\tDate : " + LocalDateTime.now() + "\n");
+                writer.write("\tType : Bill\n");
+                writer.write("\tAmount : " + amount + "\n");
+                writer.write("\tLeft Budget : " + budget + "\n");
+                writer.write("END -----------------\n");
+            }
+            catch (IOException e) {
+                System.err.println("I/O ERROR : CAN'T WRITE TO FILE");
+                e.printStackTrace();
+            }
+        }
+        else{
+            System.err.println("INSUFFICIENT FUNDS");
+        }
+    }
 
     public static void main(String[] args) {
 
@@ -183,7 +219,11 @@ public class Organisation{
         org.addMember(m2);
         org.addMember(m2);
 
-        System.out.println(org.getMembersList());
+        org.payBill(50);
+        Report r1 = new Report(org, "fincialReport", LocalDate.now(), org.financialRecord);
+        System.out.println(r1);
+        org.financialRecord.delete();
+        //System.out.println(org.getMembersList());
     }
 
 
