@@ -145,6 +145,25 @@ public class Organisation{
         return false;
     }
 
+
+    private boolean writeToRecord(File record, String typeOfOperation, float amount){
+        try(FileWriter writer = new FileWriter(financialRecord.getName())){
+            writer.write(String.format("[%s]NEW FINANCIAL OPERATION==========\n",this.name));
+            writer.write("\tDate : " + LocalDateTime.now() + "\n");
+            writer.write("\tType : " + typeOfOperation + "\n");
+            writer.write("\tAmount : " + amount + "\n");
+            writer.write("\tLeft Budget : " + budget + "\n"); // Change to budget must be done before
+            writer.write("END -----------------\n");
+            return true;
+        }
+        catch (IOException e) {
+            System.err.println("I/O ERROR : CAN'T WRITE TO FILE" + record.getAbsolutePath());
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
     public void askForDonations(){
 //        et qui peuvent ^etre de dierentes natures (ex. services municipaux, entreprises, associations, individus),
 //        mais qui doivent tous pouvoir recevoir une demande ecrite de subvention/don emanant de l'association et,
@@ -165,11 +184,20 @@ public class Organisation{
 ////        aucun autre membre n'a deja programme une visite pour cet arbre remarquable. Pour
 //    }
 //
-//    void dfrayerviste(Member){
-////        membre ayant eectue la visite est defraye pour celle-ci d'un montant xe,
-////        nombre maximum de visites par an.
-//    }
-//
+    public void refundMember(Member member, float amount){
+//        membre ayant eectue la visite est defraye pour celle-ci d'un montant xe,
+//        nombre maximum de visites par an.
+        //@TODO : ADD MEMBER ID TO RECORDS
+        // Check if member is in member list
+        if (checkMemberInMemberList(member).getLeft()){
+            // Check if the amount to refund is within budget
+            if (budget - amount > 0){
+                budget -= amount;
+                writeToRecord(financialRecord, "Refund", amount);
+            }
+        }
+    }
+
 //    void sendData(Member){
 ////        representation (dans un format a specier) de l'en-
 ////        semble de ses donnees personnelles (nom, prenom, date de naissance, adresse, date de derniere inscription,
@@ -179,24 +207,13 @@ public class Organisation{
 ////        une synthese des activites pour l'exercice precedent.
 //    }
 //
-    void payBill(float amount){
+    public void payBill(float amount){
 //        Le type de compte en banque de l'association ne lui
 //        permettant d'avoir un solde negatif, un paiement ne pourra ^etre eectue que si la somme correspondante
 //        existe bien sur le compte bancaire.
         if (budget - amount > 0){
             budget -= amount;
-            try(FileWriter writer = new FileWriter(financialRecord.getName())){
-                writer.write(String.format("[%s]NEW FINICIAL OPERATION==========\n",this.name));
-                writer.write("\tDate : " + LocalDateTime.now() + "\n");
-                writer.write("\tType : Bill\n");
-                writer.write("\tAmount : " + amount + "\n");
-                writer.write("\tLeft Budget : " + budget + "\n");
-                writer.write("END -----------------\n");
-            }
-            catch (IOException e) {
-                System.err.println("I/O ERROR : CAN'T WRITE TO FILE");
-                e.printStackTrace();
-            }
+            writeToRecord(financialRecord, "Bill", amount);
         }
         else{
             System.err.println("INSUFFICIENT FUNDS");
