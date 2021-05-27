@@ -114,7 +114,10 @@ public class Member extends Person {
     public static void main(String[] args){
         Member m1 = new Member("Houssem", "Mahmoud", new Date(1998,04,30), "Somewhere not far from Tunis",
                 new Date(2021,05,23), false, 5000);
+        Member m2 = new Member("Houssem", "Mahmoud", new Date(1998,03,30), "Somewhere not far from Tunis",
+                new Date(2021,04,23), false, 5000);
 
+        System.out.println(m1.equals(m2));
         System.out.println(m1.toString());
         m1.payContribution(500);
         System.out.println(m1.toString());

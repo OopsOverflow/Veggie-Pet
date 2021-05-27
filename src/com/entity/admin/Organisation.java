@@ -163,7 +163,7 @@ public class Organisation{
 
     private ImmutablePair<Boolean, Integer> checkMemberInMemberList(Member member){
         int index =0;
-        while (index < membersList.size() - 1){
+        while (index < membersList.size()){
             if (membersList.get(index).getRight() == member)
                 return new ImmutablePair<>(true, index);
             else
@@ -315,10 +315,9 @@ public class Organisation{
                 new Date(2000, 05, 01), "Antony",
                 new Date(2021, 05, 25), false, 15000);
 
-        Organisation org = new Organisation("Tree Lovers", 100.0f, m1);
+        Organisation org = new Organisation("Tree Lovers", 1000.0f, m1);
 
         org.addMember(m2);
-
 //        System.out.println(org.toString());
 //        org.addMoneyFromMemberContribution(m1, 200);
 //
@@ -326,7 +325,6 @@ public class Organisation{
 //        System.out.println(org.toString());
 //        System.out.println(org.checkMemberInMemberList(m3).getLeft());
 
-        System.out.println(org.checkMemberInMemberList(m2).getLeft());
         org.refundMember(m2,75);
         org.payBill(50);
         org.recieveFunds(500);
