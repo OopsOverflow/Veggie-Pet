@@ -67,7 +67,7 @@ public class Report {
         if (tree != null) {
             reportSTB.append("\tTree ID : " + tree.getTreeID() + "\n");
             reportSTB.append("\tAuthor : " + member.getName() + " " + member.getFamilyName() + "\n");
-            reportSTB.append("\tContent : " + content + "\n");
+            reportSTB.append("\tContent : \n" + content + "\n");
         }
 
         // If the author of the report is an organisation it'll
@@ -84,7 +84,7 @@ public class Report {
                 e.printStackTrace();
             }
 
-            reportSTB.append("\tContent : " + content + "\n");
+            reportSTB.append("\tContent : \n" + content + "\n");
         }
 
 

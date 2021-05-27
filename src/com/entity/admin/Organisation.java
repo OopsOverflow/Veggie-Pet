@@ -116,6 +116,8 @@ public class Organisation{
         this.membersList = membersList;
     }
 
+    // Organisation Operations
+
     private ImmutablePair<Boolean, Integer> checkMemberInMemberList(Member member){
         int index =0;
         while (index < membersList.size() - 1){
@@ -139,21 +141,26 @@ public class Organisation{
     public boolean removeMember(Member member){
         ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(member);
         if (aux.getLeft()){
+            // get the member in the the member list using his index
+            // leave the member ID, but delete all his info.
             membersList.get(aux.getRight()).setLeft(null);
+            System.out.println("Member successfully removed");
             return true;
         }
+        System.err.println("FATAL ERROR : MEMBER IS NOT A PART OF THE ORGANISATION");
         return false;
     }
 
 
     private boolean writeToRecord(File record, String typeOfOperation, float amount){
-        try(FileWriter writer = new FileWriter(financialRecord.getName())){
-            writer.write(String.format("[%s]NEW FINANCIAL OPERATION==========\n",this.name));
+        try(FileWriter writer = new FileWriter(financialRecord.getName(),true)){
+            writer.write(String.format("[%s]\nNEW FINANCIAL OPERATION==========\n",this.name));
             writer.write("\tDate : " + LocalDateTime.now() + "\n");
             writer.write("\tType : " + typeOfOperation + "\n");
             writer.write("\tAmount : " + amount + "\n");
-            writer.write("\tLeft Budget : " + budget + "\n"); // Change to budget must be done before
+            writer.write("\tNew Budget : " + budget + "\n"); // Change to budget must be done before
             writer.write("END -----------------\n");
+
             return true;
         }
         catch (IOException e) {
@@ -167,12 +174,12 @@ public class Organisation{
     public void askForDonations(){
 //        et qui peuvent ^etre de dierentes natures (ex. services municipaux, entreprises, associations, individus),
 //        mais qui doivent tous pouvoir recevoir une demande ecrite de subvention/don emanant de l'association et,
-
+        Report report = new Report(this, "Your Donations Keep Us Going",
+                LocalDate.now(), this.financialRecord);
+        //@TODO: NOTIFICATION SYSTEM
+        //donorsList.forEach(x -> sendNotification(this, x, report));
     }
 
-//    private String getRecord() {
-//
-//    }
 //
 //    void planifiervisite(){
 ////        l'association planie des visites d'arbres remarquables. Disposant de peu de
@@ -187,14 +194,21 @@ public class Organisation{
     public void refundMember(Member member, float amount){
 //        membre ayant eectue la visite est defraye pour celle-ci d'un montant xe,
 //        nombre maximum de visites par an.
-        //@TODO : ADD MEMBER ID TO RECORDS
+
         // Check if member is in member list
-        if (checkMemberInMemberList(member).getLeft()){
+        ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(member);
+        if (aux.getLeft()){
             // Check if the amount to refund is within budget
             if (budget - amount > 0){
                 budget -= amount;
-                writeToRecord(financialRecord, "Refund", amount);
+                writeToRecord(financialRecord, "Refund MEMBER " + aux.getRight(), amount);
             }
+            else {
+                System.err.println("INSUFFICIENT FUNDS");
+            }
+        }
+        else{
+            System.err.println("FATAL ERROR : MEMBER IS NOT A PART OF THE ORGANISATION");
         }
     }
 
@@ -213,11 +227,16 @@ public class Organisation{
 //        existe bien sur le compte bancaire.
         if (budget - amount > 0){
             budget -= amount;
-            writeToRecord(financialRecord, "Bill", amount);
+            writeToRecord(financialRecord, "Bill Payment", amount);
         }
         else{
             System.err.println("INSUFFICIENT FUNDS");
         }
+    }
+
+    public void recieveFunds(float amount){
+        this.budget += amount;
+        writeToRecord(financialRecord,"Recieved Payment", amount);
     }
 
     public static void main(String[] args) {
@@ -231,12 +250,15 @@ public class Organisation{
         MutablePair<Member, Integer> pair = new MutablePair<>(m1,100);
         ArrayList<Pair<Member, Integer>> list = new ArrayList<>();
         list.add(pair);
-        Organisation org = new Organisation("Tree Lovers", 100.0f, m1);
+        Organisation org = new Organisation("Tree Lovers", 10000.0f, m1);
 
         org.addMember(m2);
         org.addMember(m2);
 
+        org.refundMember(m2,75);
         org.payBill(50);
+        org.recieveFunds(500);
+
         Report r1 = new Report(org, "fincialReport", LocalDate.now(), org.financialRecord);
         System.out.println(r1);
         org.financialRecord.delete();
