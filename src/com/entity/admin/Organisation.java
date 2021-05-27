@@ -10,13 +10,14 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Vector;
 
 public class Organisation{
     private String name;
     private Float budget;
     private static int numMembers = 0;
     ArrayList<Donor> donorsList;
-    ArrayList<MutablePair<Member, Integer>> membersList = new ArrayList<>();
+    ArrayList<MutablePair<Integer, Member>> membersList = new ArrayList<>();
 
 
     public Organisation(String name, Float budget, ArrayList<Donor> donorsList, Member... members) {
@@ -24,7 +25,7 @@ public class Organisation{
         this.budget = budget;
         this.donorsList = donorsList;
         for (Member m : members){
-            membersList.add(new MutablePair<>(m, ++numMembers));
+            membersList.add(new MutablePair<>(++numMembers, m));
         }
     }
 
@@ -33,7 +34,7 @@ public class Organisation{
         this.budget = budget;
         this.donorsList = donorsList;
         for (Member m : members){
-            membersList.add(new MutablePair<>(m, ++numMembers));
+            membersList.add(new MutablePair<>(++numMembers, m));
         }
     }
 
@@ -46,7 +47,7 @@ public class Organisation{
         this.name = name;
         this.donorsList = donorsList;
         for (Member m : members){
-            membersList.add(new MutablePair<>(m, ++numMembers));
+            membersList.add(new MutablePair<>(++numMembers, m));
         }
     }
 
@@ -54,7 +55,7 @@ public class Organisation{
         this.name = name;
         this.budget = budget;
         for (Member m : members){
-            membersList.add(new MutablePair<>(m, ++numMembers));
+            membersList.add(new MutablePair<>(++numMembers, m));
         }
 
     }
@@ -64,7 +65,6 @@ public class Organisation{
      */
 
     // Getters & Setters
-
 
     public String getName() {
         return name;
@@ -90,18 +90,53 @@ public class Organisation{
         this.donorsList = donorsList;
     }
 
-    public ArrayList<MutablePair<Member, Integer>> getMembersList() {
+    public ArrayList<MutablePair<Integer, Member>> getMembersList() {
         return membersList;
     }
 
-    public void setMembersList(ArrayList<MutablePair<Member, Integer>> membersList) {
+    public void setMembersList(ArrayList<MutablePair<Integer, Member>> membersList) {
         this.membersList = membersList;
+    }
+
+    public StringBuilder getNameOfMemberInMemberList(){
+        StringBuilder s = new StringBuilder();
+        if (membersList.isEmpty()){
+                System.err.println("[ORGANISATION] Error : Get Name of Member List is impossible -> " +
+                        "The MemberList is empty");
+        }
+        else{
+            for(int i = 0 ; i < membersList.size() ; i++){
+                if(i == membersList.size()-1){
+                    s.append(membersList.get(i).getRight().getName());
+                }
+                else{
+                    s.append(membersList.get(i).getRight().getName());
+                    s.append(" ; ");
+                }
+            }
+        }
+        return s;
+    }
+    // Function
+
+    public boolean addMoneyFromMemberContribution(Member m,float amount){
+
+        if(checkMemberInMemberList(m).getLeft()){
+            m.payContribution(amount);
+            setBudget(budget+amount);
+            System.out.println("[ORGANISATION] Got " + amount + "$ from " + m.getName() + " " + m.getFamilyName() + "\n");
+        }
+        else{
+            System.err.println("[ORGANISATION] Error : " + m.getName() + " " + m.getFamilyName() + " is not a member of \"" + name + "\". Contribution Failed\n");
+        }
+
+        return false;
     }
 
     private ImmutablePair<Boolean, Integer> checkMemberInMemberList(Member member){
         int index =0;
         while (index < membersList.size() - 1){
-            if (membersList.get(index).getLeft() == member)
+            if (membersList.get(index).getRight() == member)
                 return new ImmutablePair<>(true, index);
             else
                 index++;
@@ -111,8 +146,12 @@ public class Organisation{
 
     public boolean addMember(Member member){
         if (!checkMemberInMemberList(member).getLeft()){
-            membersList.add(new MutablePair<Member, Integer>(member, ++numMembers));
+            membersList.add(new MutablePair<Integer, Member>(++numMembers, member));
+            System.out.println("Affichage du membre quand il a été ajouté : index = " + numMembers + " ; prénom du membre : " + member.getName());
             return true;
+        }
+        else{
+            System.err.println("[ORGANISATION] Error : " + member.getName() + " " + member.getFamilyName() + " could not be added to \"" + name + "\".\n");
         }
 
         return false;
@@ -133,7 +172,7 @@ public class Organisation{
 
     }
 
-//    private String getRecord() {
+    //    private String getRecord() {
 //
 //    }
 //
@@ -167,35 +206,42 @@ public class Organisation{
 ////        existe bien sur le compte bancaire.
 //    }
 
+    @Override
+    public String toString() {
+        StringBuilder OrganisationSTB = new StringBuilder(String.format("[Organisation INFO]\n"));
+        OrganisationSTB.append("\tOrganisation name : " + getName() + "\n");
+        OrganisationSTB.append("\tOrganisation budget : " + getBudget() + "\n");
+        OrganisationSTB.append("\tMember List : " + getNameOfMemberInMemberList() + "\n");
+
+        return OrganisationSTB.toString();
+    }
+
     public static void main(String[] args) {
 
-        Member m1 = new Member("Houssem", "Mahmoud", new Date(1998,04,30), "Somewhere not far from Tunis",
-                new Date(2021,05,23), false, 5000);
+        Member m1 = new Member("Houssem", "Mahmoud", new Date(1998, 04, 30), "Somewhere not far from Tunis",
+                new Date(2021, 05, 23), false, 5000);
 
-        Member m2 = new Member("Esteban", "Neraudau", new Date(2001,10,29), "Antony",
-                new Date(2021,05,23), false, 5000);
+        Member m2 = new Member("Esteban", "Neraudau", new Date(2001, 10, 29), "Antony",
+                new Date(2021, 05, 23), false, 5000);
 
-        MutablePair<Member, Integer> pair = new MutablePair<>(m1,100);
-        ArrayList<Pair<Member, Integer>> list = new ArrayList<>();
-        list.add(pair);
+        Member m3 = new Member("Mohamed", "Mahmoud", new Date(2002, 10, 28), "Somewhere not far from Tunis",
+                new Date(2021, 05, 24), false, 10000);
+
+        Member m4 = new Member("Rayane", "Hammadou",
+                new Date(2000, 05, 01), "Antony",
+                new Date(2021, 05, 25), false, 15000);
+
         Organisation org = new Organisation("Tree Lovers", 100.0f, m1);
 
         org.addMember(m2);
-        org.addMember(m2);
 
-        System.out.println(org.getMembersList());
+        System.out.println(org.toString());
+        org.addMoneyFromMemberContribution(m1, 200);
+
+        org.addMember(m3);
+        System.out.println(org.toString());
+        System.out.println(org.checkMemberInMemberList(m3).getLeft());
+
+
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
