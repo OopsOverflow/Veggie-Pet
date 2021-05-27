@@ -7,17 +7,27 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Vector;
+
+import java.io.File;
+
+
+
 
 public class Organisation{
     private String name;
     private Float budget;
     private static int numMembers = 0;
     ArrayList<Donor> donorsList;
+
+    File financialRecord = createFile(this.getName() + "FinancialRecord");
     ArrayList<MutablePair<Integer, Member>> membersList = new ArrayList<>();
+
 
 
     public Organisation(String name, Float budget, ArrayList<Donor> donorsList, Member... members) {
@@ -64,6 +74,20 @@ public class Organisation{
      * @TODO Fichier Exercice chaque année
      */
 
+    private File createFile(String fileName) {
+        try {
+            File myObj = new File(fileName + ".txt");
+            if (myObj.createNewFile()) {
+                return myObj;
+            } else {
+                System.err.println("File already exists.");
+                return this.financialRecord;
+            }
+        } catch (IOException e) {
+            System.err.println("An error occurred.");
+            return this.financialRecord;
+        }
+    }
     // Getters & Setters
 
     public String getName() {
@@ -97,6 +121,9 @@ public class Organisation{
     public void setMembersList(ArrayList<MutablePair<Integer, Member>> membersList) {
         this.membersList = membersList;
     }
+
+
+    // Organisation Operations
 
     public StringBuilder getNameOfMemberInMemberList(){
         StringBuilder s = new StringBuilder();
@@ -133,6 +160,7 @@ public class Organisation{
         return false;
     }
 
+
     private ImmutablePair<Boolean, Integer> checkMemberInMemberList(Member member){
         int index =0;
         while (index < membersList.size() - 1){
@@ -160,17 +188,45 @@ public class Organisation{
     public boolean removeMember(Member member){
         ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(member);
         if (aux.getLeft()){
+            // get the member in the the member list using his index
+            // leave the member ID, but delete all his info.
             membersList.get(aux.getRight()).setLeft(null);
+            System.out.println("Member successfully removed");
             return true;
         }
+        System.err.println("FATAL ERROR : MEMBER IS NOT A PART OF THE ORGANISATION");
         return false;
+    }
+
+
+    private boolean writeToRecord(File record, String typeOfOperation, float amount){
+        try(FileWriter writer = new FileWriter(financialRecord.getName(),true)){
+            writer.write(String.format("[%s]\nNEW FINANCIAL OPERATION==========\n",this.name));
+            writer.write("\tDate : " + LocalDateTime.now() + "\n");
+            writer.write("\tType : " + typeOfOperation + "\n");
+            writer.write("\tAmount : " + amount + "\n");
+            writer.write("\tNew Budget : " + budget + "\n"); // Change to budget must be done before
+            writer.write("END -----------------\n");
+
+            return true;
+        }
+        catch (IOException e) {
+            System.err.println("I/O ERROR : CAN'T WRITE TO FILE" + record.getAbsolutePath());
+            e.printStackTrace();
+            return false;
+        }
+
     }
 
     public void askForDonations(){
 //        et qui peuvent ^etre de dierentes natures (ex. services municipaux, entreprises, associations, individus),
 //        mais qui doivent tous pouvoir recevoir une demande ecrite de subvention/don emanant de l'association et,
-
+        Report report = new Report(this, "Your Donations Keep Us Going",
+                LocalDate.now(), this.financialRecord);
+        //@TODO: NOTIFICATION SYSTEM
+        //donorsList.forEach(x -> sendNotification(this, x, report));
     }
+
 
     //    private String getRecord() {
 //
@@ -186,11 +242,27 @@ public class Organisation{
 ////        aucun autre membre n'a deja programme une visite pour cet arbre remarquable. Pour
 //    }
 //
-//    void dfrayerviste(Member){
-////        membre ayant eectue la visite est defraye pour celle-ci d'un montant xe,
-////        nombre maximum de visites par an.
-//    }
-//
+    public void refundMember(Member member, float amount){
+//        membre ayant eectue la visite est defraye pour celle-ci d'un montant xe,
+//        nombre maximum de visites par an.
+
+        // Check if member is in member list
+        ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(member);
+        if (aux.getLeft()){
+            // Check if the amount to refund is within budget
+            if (budget - amount > 0){
+                budget -= amount;
+                writeToRecord(financialRecord, "Refund MEMBER " + aux.getRight(), amount);
+            }
+            else {
+                System.err.println("INSUFFICIENT FUNDS");
+            }
+        }
+        else{
+            System.err.println("FATAL ERROR : MEMBER IS NOT A PART OF THE ORGANISATION");
+        }
+    }
+
 //    void sendData(Member){
 ////        representation (dans un format a specier) de l'en-
 ////        semble de ses donnees personnelles (nom, prenom, date de naissance, adresse, date de derniere inscription,
@@ -200,11 +272,23 @@ public class Organisation{
 ////        une synthese des activites pour l'exercice precedent.
 //    }
 //
-//    void payfacture(){
-////        Le type de compte en banque de l'association ne lui
-////        permettant d'avoir un solde negatif, un paiement ne pourra ^etre eectue que si la somme correspondante
-////        existe bien sur le compte bancaire.
-//    }
+    public void payBill(float amount){
+//        Le type de compte en banque de l'association ne lui
+//        permettant d'avoir un solde negatif, un paiement ne pourra ^etre eectue que si la somme correspondante
+//        existe bien sur le compte bancaire.
+        if (budget - amount > 0){
+            budget -= amount;
+            writeToRecord(financialRecord, "Bill Payment", amount);
+        }
+        else{
+            System.err.println("INSUFFICIENT FUNDS");
+        }
+    }
+
+    public void recieveFunds(float amount){
+        this.budget += amount;
+        writeToRecord(financialRecord,"Recieved Payment", amount);
+    }
 
     @Override
     public String toString() {
@@ -237,6 +321,8 @@ public class Organisation{
 
         System.out.println(org.toString());
         org.addMoneyFromMemberContribution(m1, 200);
+      
+      
 
         org.addMember(m3);
         System.out.println(org.toString());
