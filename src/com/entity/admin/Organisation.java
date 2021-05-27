@@ -5,7 +5,6 @@ import com.entity.person.Member;
 import com.system.Report;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -147,14 +146,19 @@ public class Organisation{
     // Function
 
     public boolean addMoneyFromMemberContribution(Member m,float amount){
-
-        if(checkMemberInMemberList(m).getLeft()){
+        // Aux value to locally store value
+        ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(m);
+        if(aux.getLeft()){
             m.payContribution(amount);
             setBudget(budget+amount);
-            System.out.println("[ORGANISATION] Got " + amount + "$ from " + m.getName() + " " + m.getFamilyName() + "\n");
+            System.out.println(String.format("[%s] Got " + amount + "$ from " + m.getName() + " " +
+                    m.getFamilyName() + "\n", this.name));
+            writeToRecord(financialRecord, String.format("Recieved @Member %d Contribution",
+                    membersList.get(aux.getRight()).getLeft()), amount);
         }
         else{
-            System.err.println("[ORGANISATION] Error : " + m.getName() + " " + m.getFamilyName() + " is not a member of \"" + name + "\". Contribution Failed\n");
+            System.err.println(String.format("[%s] Error : " + m.getName() + " " + m.getFamilyName() +
+                    " is not a member of \"" + name + "\". Contribution Failed\n", this.name));
         }
 
         return false;
@@ -252,7 +256,7 @@ public class Organisation{
             // Check if the amount to refund is within budget
             if (budget - amount > 0){
                 budget -= amount;
-                writeToRecord(financialRecord, "Refund MEMBER " + aux.getRight(), amount);
+                writeToRecord(financialRecord, "Refund @MEMBER " + aux.getRight(), amount);
             }
             else {
                 System.err.println("INSUFFICIENT FUNDS");
@@ -287,12 +291,12 @@ public class Organisation{
 
     public void recieveFunds(float amount){
         this.budget += amount;
-        writeToRecord(financialRecord,"Recieved Payment", amount);
+        writeToRecord(financialRecord,"Received Donor Payment", amount);
     }
 
     @Override
     public String toString() {
-        StringBuilder OrganisationSTB = new StringBuilder(String.format("[Organisation INFO]\n"));
+        StringBuilder OrganisationSTB = new StringBuilder(String.format("[%s INFO]\n",this.name));
         OrganisationSTB.append("\tOrganisation name : " + getName() + "\n");
         OrganisationSTB.append("\tOrganisation budget : " + getBudget() + "\n");
         OrganisationSTB.append("\tMember List : " + getNameOfMemberInMemberList() + "\n");
@@ -318,12 +322,12 @@ public class Organisation{
         Organisation org = new Organisation("Tree Lovers", 1000.0f, m1);
 
         org.addMember(m2);
-//        System.out.println(org.toString());
-//        org.addMoneyFromMemberContribution(m1, 200);
-//
-//        org.addMember(m3);
-//        System.out.println(org.toString());
-//        System.out.println(org.checkMemberInMemberList(m3).getLeft());
+        System.out.println(org.toString());
+        org.addMoneyFromMemberContribution(m1, 200);
+
+        org.addMember(m3);
+        System.out.println(org.toString());
+        System.out.println(org.checkMemberInMemberList(m3).getLeft());
 
         org.refundMember(m2,75);
         org.payBill(50);
