@@ -1,7 +1,10 @@
 package com.veggie.pet;
 
 import com.opencsv.bean.CsvBindByName;
+import com.system.Report;
 import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
 
 
 public class Tree {
@@ -16,10 +19,13 @@ public class Tree {
     private String address;
     private Float[] GPS;
     private boolean remarkable;
+    private ArrayList<Report> listReport;
 
+
+    // Constructor
     public Tree(Integer treeID, String commonName, Integer circumference, Integer height, String specie,
-                    String genre, String developmentStage, String address,
-                        Float[] GPS, boolean remarkable) {
+                String genre, String developmentStage, String address,
+                Float[] GPS, boolean remarkable) {
         this.treeID = treeID;
         this.commonName = commonName;
         this.circumference = circumference;
@@ -32,10 +38,15 @@ public class Tree {
         this.remarkable = remarkable;
     }
 
+    // Getter
+    public Integer getTreeID() {
+        return treeID;
+    }
+
     @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
     @Override
     public String toString(){
-        StringBuilder treeSTB = new StringBuilder(String.format("[Tree %d NFO]\n", this.treeID));
+        StringBuilder treeSTB = new StringBuilder(String.format("[Tree %d INFO]\n", this.treeID));
         treeSTB.append("\tGenre : \t" + genre + "\n");
         treeSTB.append("\tSpecie :\t" + specie + "\n");
         treeSTB.append("\tHeight (Meters) : \t" + height + "\n");
@@ -47,6 +58,13 @@ public class Tree {
 
 
         return treeSTB.toString();
+    }
+
+    public static void main(String[] args){
+        Tree t = new Tree(147179, "Marronnier", 150, 15, "hippocastanum",
+                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
+                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
+        System.out.println(t.toString());
     }
 
 }
