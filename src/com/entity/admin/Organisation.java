@@ -98,18 +98,24 @@ public class Organisation{
         this.membersList = membersList;
     }
 
-    public Vector<String> getNameOfMemberInMemberList(){
-        Vector vecName = new Vector();
+    public StringBuilder getNameOfMemberInMemberList(){
+        StringBuilder s = new StringBuilder();
         if (membersList.isEmpty()){
                 System.err.println("[ORGANISATION] Error : Get Name of Member List is impossible -> " +
                         "The MemberList is empty");
         }
         else{
             for(int i = 0 ; i < membersList.size() ; i++){
-                vecName.add(membersList.get(i).getRight().getName());
+                if(i == membersList.size()-1){
+                    s.append(membersList.get(i).getRight().getName());
+                }
+                else{
+                    s.append(membersList.get(i).getRight().getName());
+                    s.append(" ; ");
+                }
             }
         }
-        return vecName;
+        return s;
     }
     // Function
 
@@ -118,9 +124,10 @@ public class Organisation{
         if(checkMemberInMemberList(m).getLeft()){
             m.payContribution(amount);
             setBudget(budget+amount);
+            System.out.println("[ORGANISATION] Got " + amount + "$ from " + m.getName() + " " + m.getFamilyName() + "\n");
         }
         else{
-            System.err.println("[ORGANISATION] Error : " + m.getName() + " "+ m.getFamilyName() + " is not a member of \"" + name + "\". Contribution Failed");
+            System.err.println("[ORGANISATION] Error : " + m.getName() + " " + m.getFamilyName() + " is not a member of \"" + name + "\". Contribution Failed\n");
         }
 
         return false;
@@ -140,7 +147,11 @@ public class Organisation{
     public boolean addMember(Member member){
         if (!checkMemberInMemberList(member).getLeft()){
             membersList.add(new MutablePair<Integer, Member>(++numMembers, member));
+            System.out.println("Affichage du membre quand il a été ajouté : index = " + numMembers + " ; prénom du membre : " + member.getName());
             return true;
+        }
+        else{
+            System.err.println("[ORGANISATION] Error : " + member.getName() + " " + member.getFamilyName() + " could not be added to \"" + name + "\".\n");
         }
 
         return false;
@@ -160,13 +171,6 @@ public class Organisation{
 //        mais qui doivent tous pouvoir recevoir une demande ecrite de subvention/don emanant de l'association et,
 
     }
-    
-    /*public void displayVector(Vector v){
-        for ( :
-             ) {
-            
-        }
-    }*/
 
     //    private String getRecord() {
 //
@@ -204,11 +208,10 @@ public class Organisation{
 
     @Override
     public String toString() {
-        Vector v = getNameOfMemberInMemberList();
         StringBuilder OrganisationSTB = new StringBuilder(String.format("[Organisation INFO]\n"));
         OrganisationSTB.append("\tOrganisation name : " + getName() + "\n");
         OrganisationSTB.append("\tOrganisation budget : " + getBudget() + "\n");
-        OrganisationSTB.append("\tMember List : " +  "\n");
+        OrganisationSTB.append("\tMember List : " + getNameOfMemberInMemberList() + "\n");
 
         return OrganisationSTB.toString();
     }
@@ -224,16 +227,21 @@ public class Organisation{
         Member m3 = new Member("Mohamed", "Mahmoud", new Date(2002, 10, 28), "Somewhere not far from Tunis",
                 new Date(2021, 05, 24), false, 10000);
 
+        Member m4 = new Member("Rayane", "Hammadou",
+                new Date(2000, 05, 01), "Antony",
+                new Date(2021, 05, 25), false, 15000);
+
         Organisation org = new Organisation("Tree Lovers", 100.0f, m1);
 
         org.addMember(m2);
 
-        //System.out.println(org.getMembersList());
-
         System.out.println(org.toString());
         org.addMoneyFromMemberContribution(m1, 200);
+
+        org.addMember(m3);
         System.out.println(org.toString());
-        org.addMoneyFromMemberContribution(m3, 200);
-        System.out.println(org.toString());
+        System.out.println(org.checkMemberInMemberList(m3).getLeft());
+
+
     }
 }
