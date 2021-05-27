@@ -3,6 +3,7 @@ package com.entity.admin;
 import com.entity.Donor;
 import com.entity.person.Member;
 import com.system.Report;
+import com.entity.admin.OrganisationDB;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -11,21 +12,21 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 import java.io.File;
-
-
+import java.util.concurrent.TimeUnit;
 
 
 public class Organisation{
     private String name;
     private Float budget;
     private static int numMembers = 0;
+    private String DBURL;
     ArrayList<Donor> donorsList;
 
-    File financialRecord = createFile(this.getName() + "FinancialRecord");
-    ArrayList<MutablePair<Integer, Member>> membersList = new ArrayList<>();
+    File financialRecord;
+    private ArrayList<MutablePair<Integer, Member>> membersList = new ArrayList<>();
 
 
 
@@ -33,40 +34,59 @@ public class Organisation{
         this.name = name;
         this.budget = budget;
         this.donorsList = donorsList;
+        this.DBURL = OrganisationDB.connect(name);
         for (Member m : members){
             membersList.add(new MutablePair<>(++numMembers, m));
+            OrganisationDB.insertMemberData(DBURL, numMembers,m.getName(), m.getFamilyName(),
+                    (java.sql.Date) m.getLastRegistrationDate(), "");
         }
+        this.financialRecord = createFile(name.replaceAll("\\s+","")  + "FinancialRecord");
     }
 
     public Organisation(String name, Float budget, ArrayList<Donor> donorsList, ArrayList<Member> members) {
         this.name = name;
         this.budget = budget;
         this.donorsList = donorsList;
+        this.DBURL = OrganisationDB.connect(name);
         for (Member m : members){
             membersList.add(new MutablePair<>(++numMembers, m));
+            OrganisationDB.insertMemberData(DBURL, numMembers,m.getName(), m.getFamilyName(),
+                    (java.sql.Date) m.getLastRegistrationDate(), "");
         }
+        // .replaceAll() removes white spaces from name
+        // Better indexing on cross platform
+        this.financialRecord = createFile(name.replaceAll("\\s+","")  + "FinancialRecord");
     }
 
     public Organisation(String name, Float budget) {
         this.name = name;
         this.budget = budget;
+        this.DBURL = OrganisationDB.connect(name);
+        this.financialRecord = createFile(name.replaceAll("\\s+","")  + "FinancialRecord");
     }
 
     public Organisation(String name, ArrayList<Donor> donorsList, Member ...members) {
         this.name = name;
         this.donorsList = donorsList;
+        this.DBURL = OrganisationDB.connect(name);
         for (Member m : members){
             membersList.add(new MutablePair<>(++numMembers, m));
+            OrganisationDB.insertMemberData(DBURL, numMembers,m.getName(), m.getFamilyName(),
+                    (java.sql.Date) m.getLastRegistrationDate(), "");
         }
+        this.financialRecord = createFile(name.replaceAll("\\s+","")  + "FinancialRecord");
     }
 
     public Organisation(String name, Float budget, Member ... members) {
         this.name = name;
         this.budget = budget;
+        this.DBURL = OrganisationDB.connect(name);
         for (Member m : members){
             membersList.add(new MutablePair<>(++numMembers, m));
+            OrganisationDB.insertMemberData(DBURL, numMembers,m.getName(), m.getFamilyName(),
+                    (java.sql.Date) m.getLastRegistrationDate(), "");
         }
-
+        this.financialRecord = createFile(name.replaceAll("\\s+","")  + "FinancialRecord");
     }
 
     /**@TODO Ficher Exercice Budgétaire
@@ -80,7 +100,7 @@ public class Organisation{
                 return myObj;
             } else {
                 System.err.println("File already exists.");
-                return this.financialRecord;
+                return new File(fileName + ".txt");
             }
         } catch (IOException e) {
             System.err.println("An error occurred.");
@@ -180,6 +200,8 @@ public class Organisation{
         if (!checkMemberInMemberList(member).getLeft()){
             membersList.add(new MutablePair<Integer, Member>(++numMembers, member));
             System.out.println("Affichage du membre quand il a été ajouté : index = " + numMembers + " ; prénom du membre : " + member.getName());
+            OrganisationDB.insertMemberData(DBURL, numMembers, member.getName(), member.getFamilyName(),
+                    (java.sql.Date) member.getLastRegistrationDate(), "");
             return true;
         }
         else{
@@ -304,7 +326,7 @@ public class Organisation{
         return OrganisationSTB.toString();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         Member m1 = new Member("Houssem", "Mahmoud", new Date(1998, 04, 30), "Somewhere not far from Tunis",
                 new Date(2021, 05, 23), false, 5000);
@@ -324,18 +346,21 @@ public class Organisation{
         org.addMember(m2);
         System.out.println(org.toString());
         org.addMoneyFromMemberContribution(m1, 200);
-
+        // Added time delays for dramatic effect
+        TimeUnit.SECONDS.sleep(2);
         org.addMember(m3);
         System.out.println(org.toString());
         System.out.println(org.checkMemberInMemberList(m3).getLeft());
 
         org.refundMember(m2,75);
+        TimeUnit.SECONDS.sleep(2);
         org.payBill(50);
         org.recieveFunds(500);
+        TimeUnit.SECONDS.sleep(2);
 
         Report r1 = new Report(org, "fincialReport", LocalDate.now(), org.financialRecord);
         System.out.println(r1);
-        org.financialRecord.delete();
+        //org.financialRecord.delete();
         //System.out.println(org.getMembersList());
 
 

@@ -7,7 +7,7 @@ import com.veggie.pet.Tree;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Scanner;
 
 public class Report {
