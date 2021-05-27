@@ -190,7 +190,7 @@ public class Organisation{
         if (aux.getLeft()){
             // get the member in the the member list using his index
             // leave the member ID, but delete all his info.
-            membersList.get(aux.getRight()).setLeft(null);
+            membersList.get(aux.getRight()).setRight(null);
             System.out.println("Member successfully removed");
             return true;
         }
@@ -319,14 +319,24 @@ public class Organisation{
 
         org.addMember(m2);
 
-        System.out.println(org.toString());
-        org.addMoneyFromMemberContribution(m1, 200);
-      
-      
+//        System.out.println(org.toString());
+//        org.addMoneyFromMemberContribution(m1, 200);
+//
+//        org.addMember(m3);
+//        System.out.println(org.toString());
+//        System.out.println(org.checkMemberInMemberList(m3).getLeft());
 
-        org.addMember(m3);
-        System.out.println(org.toString());
-        System.out.println(org.checkMemberInMemberList(m3).getLeft());
+        System.out.println(org.checkMemberInMemberList(m2).getLeft());
+        org.refundMember(m2,75);
+        org.payBill(50);
+        org.recieveFunds(500);
+
+        Report r1 = new Report(org, "fincialReport", LocalDate.now(), org.financialRecord);
+        System.out.println(r1);
+        org.financialRecord.delete();
+        //System.out.println(org.getMembersList());
+
+
 
 
     }
