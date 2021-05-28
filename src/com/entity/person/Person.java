@@ -1,6 +1,6 @@
 package com.entity.person;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Person {
     private String name;
