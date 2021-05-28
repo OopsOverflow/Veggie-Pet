@@ -103,7 +103,7 @@ public class Member extends Person {
     @Override
     public String toString() {
         StringBuilder memberSTB = new StringBuilder(String.format("[Member INFO]\n"));
-        memberSTB.append("\tName : " + getName() + "\n");
+        memberSTB.append("\tName : ").append(getName()).append("\n");
         memberSTB.append("\tFamily Name : " + getFamilyName() + "\n");
         memberSTB.append("\tPayed Contribution ? " + isPayedContribution() + "\n");
 

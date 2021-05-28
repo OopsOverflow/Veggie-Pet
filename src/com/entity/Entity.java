@@ -28,7 +28,10 @@ public class Entity {
         return letterBox;
     }
 
-    public void setLetterBox(StringBuilder letterBox) {
-        this.letterBox = letterBox;
+    public void appendLetterBox(String notification) {
+        if (!letterBox.toString().contains(notification))
+            letterBox.append(notification);
+        else
+            System.out.println("Notification Rejected, Already Received");
     }
 }
