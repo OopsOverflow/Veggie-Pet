@@ -4,6 +4,8 @@ import com.entity.Donor;
 import com.entity.Entity;
 import com.entity.person.Member;
 import com.system.Report;
+import com.veggie.Tree;
+import org.apache.commons.collections4.OrderedMap;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -11,7 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.*;
 import java.sql.Date;
 
 import java.io.File;
@@ -24,10 +26,13 @@ public class Organisation extends Entity {
     private String DBURL;
     ArrayList<Donor> donorsList;
 
+    // Financial Record
     File financialRecord;
     private ArrayList<MutablePair<Integer, Member>> membersList = new ArrayList<>();
 
-
+    // Vote
+    private ArrayList<Queue<Tree>> listVoteMember = new ArrayList<>();
+    private Map<Integer, Integer> mapTreeVote = new HashMap<>();
 
     public Organisation(String name, Float budget, ArrayList<Donor> donorsList, Member... members) {
         super(name);
@@ -132,6 +137,9 @@ public class Organisation extends Entity {
         this.membersList = membersList;
     }
 
+    public ArrayList<Queue<Tree>> getListVoteMember() {
+        return listVoteMember;
+    }
 
     // Organisation Operations
 
@@ -202,6 +210,38 @@ public class Organisation extends Entity {
         return false;
     }
 
+
+    // VOTE's FUNCTION
+
+    // Une fonction pour récupérer tous les votes de chaque membre de l'organisation
+    // La fonction récupère tous les votes de tous les membres de l'association et stocke ça dans listVoteMember
+    private void getVotesFromMember(){
+        for(MutablePair<Integer, Member> m : membersList){
+            listVoteMember.add(m.getRight().getVotes());
+        }
+    }
+
+    // Une fonction pour compter les votes de chaque membre - mapTreeVote
+    private void countVote(){
+        for(int i = 0 ; i < listVoteMember.size() ; i++){
+            for(int j = 0 ; i < listVoteMember.get(i).size() ; j++){
+                if(!(mapTreeVote.containsKey(listVoteMember.get(i).element().getTreeID()))){
+                    mapTreeVote.put(listVoteMember.get(i).element().getTreeID(), new Integer(1));
+                }
+                else{
+                    // récupérer le int du vote et faire ++ comme ça on aura le nombre de vote
+                    mapTreeVote.get("");
+                }
+            }
+        }
+    }
+
+    // Une fonction pour parcourir et avoir le classement des votes
+
+
+    // Une fonction pour récuperer les 5 arbres les plus votés et les stocker dans un tableau
+
+
     // TODO: 28/05/2021 Add remove member to DB
     public boolean removeMember(Member member){
         ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(member);
@@ -215,7 +255,6 @@ public class Organisation extends Entity {
         System.err.println("FATAL ERROR : MEMBER IS NOT A PART OF THE ORGANISATION");
         return false;
     }
-
 
     private boolean writeToRecord(File record, String typeOfOperation, float amount){
         try(FileWriter writer = new FileWriter(financialRecord.getName(),true)){
@@ -260,6 +299,7 @@ public class Organisation extends Entity {
 ////        aucun autre membre n'a deja programme une visite pour cet arbre remarquable. Pour
 //    }
 //
+
     public void refundMember(Member member, float amount){
 //        membre ayant eectue la visite est defraye pour celle-ci d'un montant xe,
 //        nombre maximum de visites par an.
@@ -333,30 +373,70 @@ public class Organisation extends Entity {
                 new Date(2000, 05, 01), "Antony",
                 new Date(2021, 05, 25), false, 15000);
 
-        Organisation org = new Organisation("Tree Lovers", 1000.0f, m1);
+        Tree t1 = new Tree(147179, "Marronnier", 150, 15, "hippocastanum",
+                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
+                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
 
-        org.addMember(m2);
-        System.out.println(org.toString());
-        org.addMoneyFromMemberContribution(m1, 200);
+        Tree t2 = new Tree(1, "Marronnier", 150, 15, "hippocastanum",
+                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
+                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
+
+        Tree t3 = new Tree(2, "Marronnier", 150, 15, "hippocastanum",
+                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
+                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
+
+        Tree t4 = new Tree(3, "Marronnier", 150, 15, "hippocastanum",
+                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
+                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
+
+        Tree t5 = new Tree(4, "Marronnier", 150, 15, "hippocastanum",
+                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
+                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
+
+        Tree t6 = new Tree(5, "Marronnier", 150, 15, "hippocastanum",
+                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
+                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
+
+        Tree t7 = new Tree(6, "Marronnier", 150, 15, "hippocastanum",
+                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
+                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
+
+        // Organisation org = new Organisation("Tree Lovers", 1000.0f, m1);
+
+        // org.addMember(m2);
+        // System.out.println(org.toString());
+        /*org.getVotesFromMember();
+        System.out.println(org.getListVoteMember());*/
+
+        m2.vote(t1,t2,t3);
+        m1.vote(t1,t3,t5);
+        m3.vote(t1,t4,t5);
+        m4.vote(t1,t6,t7);
+
+        //org.addMoneyFromMemberContribution(m1, 200);
         // Added time delays for dramatic effect
-        TimeUnit.SECONDS.sleep(2);
-        org.addMember(m3);
-        System.out.println(org.toString());
-        System.out.println(org.checkMemberInMemberList(m3).getLeft());
+        //TimeUnit.SECONDS.sleep(2);
+        //org.addMember(m3);
+        //System.out.println(org.toString());
+        //System.out.println(org.checkMemberInMemberList(m3).getLeft());
 
-        org.refundMember(m2,75);
-        TimeUnit.SECONDS.sleep(2);
-        org.payBill(50);
-        org.recieveFunds(500);
-        TimeUnit.SECONDS.sleep(2);
+        //org.refundMember(m2,75);
+        //TimeUnit.SECONDS.sleep(2);
+        //org.payBill(50);
+        //org.recieveFunds(500);
+        //TimeUnit.SECONDS.sleep(2);
 
-        Report r1 = new Report(org, "fincialReport", LocalDate.now(), org.financialRecord);
-        System.out.println(r1);
+        //Report r1 = new Report(org, "financialReport", LocalDate.now(), org.financialRecord);
+        //System.out.println(r1);
         //org.financialRecord.delete();
         //System.out.println(org.getMembersList());
 
+        Map<String, Integer> map = new HashMap<>();
 
+        map.put("key1", 1);
+        map.put("key2", 1);
+        map.put("key3", new Integer(1));
 
-
+        System.out.println(map.get("key3")); // Trouver comment incrémenter une valeur dans une map a partir de sa clé
     }
 }
