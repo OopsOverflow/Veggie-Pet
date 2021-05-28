@@ -1,25 +1,20 @@
-package com.veggie.parser;
+package com.veggie.tree;
 import com.opencsv.*;
-import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import com.opencsv.exceptions.CsvValidationException;
-import com.veggie.pet.Tree;
-import org.apache.commons.lang3.*;
+import com.veggie.tree.Tree;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
 
 
 public class ParserCSV {
 
-    public static ArrayList<Tree> parseDataFromCSVFile(String fileName) throws FileNotFoundException {
+    public static ArrayList<Tree> parseDataFromCSVFile(String fileName){
 
         Integer treeID;
         String address;

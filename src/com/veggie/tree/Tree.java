@@ -1,8 +1,6 @@
-package com.veggie.pet;
+package com.veggie.tree;
 
-import com.opencsv.bean.CsvBindByName;
 import com.system.Report;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 
@@ -38,9 +36,56 @@ public class Tree {
         this.remarkable = remarkable;
     }
 
-    // Getter
+    // Getters & Setters
     public Integer getTreeID() {
         return treeID;
+    }
+
+    public String getCommonName() {
+        return commonName;
+    }
+
+    public Integer getCircumference() {
+        return circumference;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public String getSpecie() {
+        return specie;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public String getDevelopmentStage() {
+        return developmentStage;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public Float[] getGPS() {
+        return GPS;
+    }
+
+    public boolean isRemarkable() {
+        return remarkable;
+    }
+
+    public ArrayList<Report> getListReport() {
+        return listReport;
+    }
+
+    public void setRemarkable(boolean remarkable) {
+        if(remarkable)
+            System.err.println(String.format("[Tree %d] ERROR : TREE IS ALREADY REMARKABLE", treeID));
+        else
+            this.remarkable = remarkable;
     }
 
     @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
@@ -49,6 +94,7 @@ public class Tree {
         StringBuilder treeSTB = new StringBuilder(String.format("[Tree %d INFO]\n", this.treeID));
         treeSTB.append("\tGenre : \t" + genre + "\n");
         treeSTB.append("\tSpecie :\t" + specie + "\n");
+        treeSTB.append("\tCommon Name :\t" + commonName + "\n");
         treeSTB.append("\tHeight (Meters) : \t" + height + "\n");
         treeSTB.append("\tCircumference (Centimeters) : \t" + circumference + "\n");
         treeSTB.append("\tDevelopment Stage : \t" + developmentStage + "\n");

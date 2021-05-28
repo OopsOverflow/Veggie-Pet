@@ -1,9 +1,9 @@
 package com.entity.admin;
 
 import com.entity.Donor;
+import com.entity.Entity;
 import com.entity.person.Member;
 import com.system.Report;
-import com.entity.admin.OrganisationDB;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -18,8 +18,7 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 
-public class Organisation{
-    private String name;
+public class Organisation extends Entity {
     private Float budget;
     private static int numMembers = 0;
     private String DBURL;
@@ -31,7 +30,7 @@ public class Organisation{
 
 
     public Organisation(String name, Float budget, ArrayList<Donor> donorsList, Member... members) {
-        this.name = name;
+        super(name);
         this.budget = budget;
         this.donorsList = donorsList;
         this.DBURL = OrganisationDB.connect(name);
@@ -44,7 +43,7 @@ public class Organisation{
     }
 
     public Organisation(String name, Float budget, ArrayList<Donor> donorsList, ArrayList<Member> members) {
-        this.name = name;
+        super(name);
         this.budget = budget;
         this.donorsList = donorsList;
         this.DBURL = OrganisationDB.connect(name);
@@ -59,14 +58,14 @@ public class Organisation{
     }
 
     public Organisation(String name, Float budget) {
-        this.name = name;
+        super(name);
         this.budget = budget;
         this.DBURL = OrganisationDB.connect(name);
         this.financialRecord = createFile(name.replaceAll("\\s+","")  + "FinancialRecord");
     }
 
     public Organisation(String name, ArrayList<Donor> donorsList, Member ...members) {
-        this.name = name;
+        super(name);
         this.donorsList = donorsList;
         this.DBURL = OrganisationDB.connect(name);
         for (Member m : members){
@@ -78,7 +77,7 @@ public class Organisation{
     }
 
     public Organisation(String name, Float budget, Member ... members) {
-        this.name = name;
+        super(name);
         this.budget = budget;
         this.DBURL = OrganisationDB.connect(name);
         for (Member m : members){
@@ -108,14 +107,6 @@ public class Organisation{
         }
     }
     // Getters & Setters
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public Float getBudget() {
         return budget;
@@ -172,13 +163,13 @@ public class Organisation{
             m.payContribution(amount);
             setBudget(budget+amount);
             System.out.println(String.format("[%s] Got " + amount + "$ from " + m.getName() + " " +
-                    m.getFamilyName() + "\n", this.name));
+                    m.getFamilyName() + "\n", this.getName()));
             writeToRecord(financialRecord, String.format("Recieved @Member %d Contribution",
                     membersList.get(aux.getRight()).getLeft()), amount);
         }
         else{
             System.err.println(String.format("[%s] Error : " + m.getName() + " " + m.getFamilyName() +
-                    " is not a member of \"" + name + "\". Contribution Failed\n", this.name));
+                    " is not a member of \"" + this.getName() + "\". Contribution Failed\n", this.getName()));
         }
 
         return false;
@@ -205,12 +196,13 @@ public class Organisation{
             return true;
         }
         else{
-            System.err.println("[ORGANISATION] Error : " + member.getName() + " " + member.getFamilyName() + " could not be added to \"" + name + "\".\n");
+            System.err.println("[ORGANISATION] Error : " + member.getName() + " " + member.getFamilyName() + " could not be added to \"" + this.getName() + "\".\n");
         }
 
         return false;
     }
 
+    // TODO: 28/05/2021 Add remove member to DB
     public boolean removeMember(Member member){
         ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(member);
         if (aux.getLeft()){
@@ -227,7 +219,7 @@ public class Organisation{
 
     private boolean writeToRecord(File record, String typeOfOperation, float amount){
         try(FileWriter writer = new FileWriter(financialRecord.getName(),true)){
-            writer.write(String.format("[%s]\nNEW FINANCIAL OPERATION==========\n",this.name));
+            writer.write(String.format("[%s]\nNEW FINANCIAL OPERATION==========\n",this.getName()));
             writer.write("\tDate : " + LocalDateTime.now() + "\n");
             writer.write("\tType : " + typeOfOperation + "\n");
             writer.write("\tAmount : " + amount + "\n");
@@ -318,7 +310,7 @@ public class Organisation{
 
     @Override
     public String toString() {
-        StringBuilder OrganisationSTB = new StringBuilder(String.format("[%s INFO]\n",this.name));
+        StringBuilder OrganisationSTB = new StringBuilder(String.format("[%s INFO]\n",this.getName()));
         OrganisationSTB.append("\tOrganisation name : " + getName() + "\n");
         OrganisationSTB.append("\tOrganisation budget : " + getBudget() + "\n");
         OrganisationSTB.append("\tMember List : " + getNameOfMemberInMemberList() + "\n");

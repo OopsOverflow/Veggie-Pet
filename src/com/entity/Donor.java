@@ -13,4 +13,5 @@ public class Donor{
     public void donate(float amount, Organisation org){
         org.recieveFunds(amount);
     }
+
 }
