@@ -1,22 +1,19 @@
 package com.entity.person;
 
+import com.entity.Entity;
+
 import java.sql.Date;
 
-public class Person {
-    private String name;
+public class Person extends Entity {
     private String familyName;
     private Date dateOfBirth;
     private String address;
 
     public Person(String name, String familyName, Date dateOfBirth, String address) {
-        this.name = name;
+        super(name);
         this.familyName = familyName;
         this.dateOfBirth = dateOfBirth;
         this.address = address;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getFamilyName() {
@@ -49,7 +46,7 @@ public class Person {
         Person c = (Person) other;
 
         // Compare the data members and return accordingly
-        return this.name.equals(c.name)
+        return this.getName().equals(c.getName())
                 && this.familyName.equals(c.familyName)
                 && this.address.equals(c.address)
                 && this.dateOfBirth.equals(c.dateOfBirth);
