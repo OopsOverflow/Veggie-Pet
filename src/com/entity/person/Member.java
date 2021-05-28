@@ -2,14 +2,13 @@ package com.entity.person;
 
 import com.entity.admin.Organisation;
 import com.system.Report;
-import com.veggie.pet.Tree;
+import com.veggie.tree.Tree;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 
-import java.sql.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 public class Member extends Person {
     private Date lastRegistrationDate;
@@ -104,7 +103,7 @@ public class Member extends Person {
     @Override
     public String toString() {
         StringBuilder memberSTB = new StringBuilder(String.format("[Member INFO]\n"));
-        memberSTB.append("\tName : " + getName() + "\n");
+        memberSTB.append("\tName : ").append(getName()).append("\n");
         memberSTB.append("\tFamily Name : " + getFamilyName() + "\n");
         memberSTB.append("\tPayed Contribution ? " + isPayedContribution() + "\n");
 
@@ -114,7 +113,10 @@ public class Member extends Person {
     public static void main(String[] args){
         Member m1 = new Member("Houssem", "Mahmoud", new Date(1998,04,30), "Somewhere not far from Tunis",
                 new Date(2021,05,23), false, 5000);
+        Member m2 = new Member("Houssem", "Mahmoud", new Date(1998,03,30), "Somewhere not far from Tunis",
+                new Date(2021,04,23), false, 5000);
 
+        System.out.println(m1.equals(m2));
         System.out.println(m1.toString());
         m1.payContribution(500);
         System.out.println(m1.toString());
