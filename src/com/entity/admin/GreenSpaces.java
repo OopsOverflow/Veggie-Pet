@@ -1,7 +1,8 @@
 package com.entity.admin;
 
 import com.entity.Entity;
-import com.veggie.tree.Tree;
+import com.veggie.*;
+
 
 import java.util.ArrayList;
 

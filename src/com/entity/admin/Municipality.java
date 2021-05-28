@@ -1,8 +1,8 @@
 package com.entity.admin;
 
 import com.entity.Entity;
-import com.veggie.tree.Tree;
-import com.veggie.tree.ParserCSV;
+import com.veggie.Tree;
+import com.veggie.ParserCSV;
 
 import java.io.File;
 import java.util.ArrayList;

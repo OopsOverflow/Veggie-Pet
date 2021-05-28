@@ -3,10 +3,11 @@ package com.entity.person;
 import com.entity.admin.Organisation;
 import com.entity.admin.OrganisationDB;
 import com.system.Report;
-import com.veggie.tree.Tree;
+import com.veggie.Tree;
+
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
-import sun.awt.image.ImageWatched;
+
 
 
 import java.time.LocalDate;
@@ -107,7 +108,7 @@ public class Member extends Person {
                 // Peut etre ajouter le nouveau vote (id de l'arbre + prénom) au profit du plus ancient pour prévenir l'utilisateur (id de l'arbre + prénom)
                 System.out.println(String.format("\n[%s] Do you really want to replace you oldest vote ? " +
                         "(You already voted for 5 Trees)", this.getName()));
-                
+
                 Scanner sc = new Scanner(System.in);
                 String answer;
                 do{

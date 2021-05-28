@@ -2,7 +2,7 @@ package com.system;
 
 import com.entity.admin.Organisation;
 import com.entity.person.Member;
-import com.veggie.tree.Tree;
+import com.veggie.Tree;
 
 import java.io.File;
 import java.io.FileNotFoundException;

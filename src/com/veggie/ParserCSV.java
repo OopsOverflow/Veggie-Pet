@@ -1,12 +1,11 @@
-package com.veggie.tree;
+package com.veggie;
 import com.opencsv.*;
 import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import com.opencsv.exceptions.CsvValidationException;
-import com.veggie.tree.Tree;
+
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
