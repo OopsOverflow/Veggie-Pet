@@ -516,11 +516,20 @@ public class Organisation extends Entity {
 ////        aucun autre membre n'a deja programme une visite pour cet arbre remarquable. Pour
 //    }
 //
+    /**
+     * Méthode modélisant le tri d'un ArrayList d'arbre par sa date
+     * @return l'arrayList d'arbre trié
+     */
     private ArrayList<Tree> getSortedTreeByDate(){
         Collections.sort(municipality.getTrees(), Tree.ComparatorTree);
         return municipality.getTrees();
     }
 
+    /**
+     * Méthode modélisant le setup de la variable d'instance listRemarkableTreeNotVisitedForAWhile.
+     * Cette variable est une file qui contient les arbres les moins visités. La tête de liste est l'arbre le moins
+     * visité et ainsi de suite.
+     */
     private void setupListRemarkableTreeNotVisitedForAWhile(){
         ArrayList<Tree> sortedTreeByDate = getSortedTreeByDate();
         // private ArrayList<Queue<Tree>> listRemarkableTreeNotVisitedForAWhile = new ArrayList<>();
@@ -531,6 +540,10 @@ public class Organisation extends Entity {
         }
     }
 
+    /**
+     * Méthode modélisant le setup de la liste des arbres remarquables.
+     * Affecte a la variable d'instance 'mapVisit' les données convenues
+     */
     private void setupListRemarkableTreeVisit(){
         for(int i = 0 ; i < municipality.getTrees().size() ; i++){
             if(!(municipality.getTrees().get(i).isRemarkable())){
@@ -544,6 +557,15 @@ public class Organisation extends Entity {
         }
     }
 
+    /**
+     * Méthode modélisant l'acceptation ou non d'une demande de visite d'un membre
+     * Si la demande de visite de l'arbre t correspond a un arbre qui n'a pas fait l'objet de demande de visite alors
+     * la demande est automatiquement accepté.
+     * Sinon il est indiqué au membre que la visite est impossible et il lui est indiqué quelques arbres qui n'ont pas
+     * fait l'objet de visite depuis longtemps
+     * @param m le membre qui fait la demande de visite
+     * @return
+     */
     public void allowOrNotVisit(Member m, Tree t){
         System.out.println("La fonction s'éxecute");
         if(t.isRemarkable()){
@@ -567,6 +589,9 @@ public class Organisation extends Entity {
 
     }
 
+    /**
+     * Méthode qui regroupe juste les fonctions de setup pour les visites. Utile pour effectuer des tests.
+     */
     public void doAllVisitFx(){
         setupListRemarkableTreeNotVisitedForAWhile();
         setupListRemarkableTreeVisit();
@@ -574,6 +599,11 @@ public class Organisation extends Entity {
         System.out.println("ListRemarkableTreeVisit : " + mapVisit);
     }
 
+    /**
+     * Méthode modélisant le défraiement d'un membre
+     * @param member le membre en question
+     * @param amount le montant du défraiement
+     */
     public void refundMember(Member member, float amount){
 //        membre ayant eectue la visite est defraye pour celle-ci d'un montant xe,
 //        nombre maximum de visites par an.
@@ -595,6 +625,11 @@ public class Organisation extends Entity {
         }
     }
 
+    /**
+     * Méthode modélisant l'envoi des données d'un membre
+     * @param member le membre en question
+     * @return un String correspondant aux données d'un membre
+     */
     public String sendData(Member member){
         // Get memeber ID
         ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(member);
@@ -604,6 +639,10 @@ public class Organisation extends Entity {
         return null;
     }
 
+    /**
+     * Méthode modélisant le paiement d'une facture
+     * @param amount le montant
+     */
     public void payBill(float amount){
 //        Le type de compte en banque de l'association ne lui
 //        permettant d'avoir un solde negatif, un paiement ne pourra ^etre eectue que si la somme correspondante
@@ -617,6 +656,10 @@ public class Organisation extends Entity {
         }
     }
 
+    /**
+     * Méthode modélisant le fait que l'organisation reçoit des fonds
+     * @param amount le montant des fonds reçus
+     */
     public void recieveFunds(float amount){
         this.budget += amount;
         FileManager.writeToRecord(this, financialRecord,"Received Donor Payment", amount, budget);
