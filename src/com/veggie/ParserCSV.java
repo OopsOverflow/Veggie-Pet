@@ -13,6 +13,11 @@ import java.util.ArrayList;
 
 public class ParserCSV {
 
+    /**
+     * Méthode permettant d'obtenir des données a partir d'un fichier CSV.
+     * @param fileName le fichier en question
+     * @return un ArrayList d'arbre
+     */
     public static ArrayList<Tree> parseDataFromCSVFile(String fileName){
 
         Integer treeID;
@@ -110,6 +115,7 @@ public class ParserCSV {
         return parsedData;
     }
     @SuppressWarnings("unchecked")
+
     public static void main(String[] args) throws IOException, CsvException, CsvRequiredFieldEmptyException {
         String fileName = new File("files/testData.csv").getAbsolutePath();
         System.out.println(fileName);

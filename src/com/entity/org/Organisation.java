@@ -11,8 +11,6 @@ import com.veggie.Tree;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -40,8 +38,16 @@ public class Organisation extends Entity {
 
     // Visit
     private Map<Integer, Boolean> mapVisit = new HashMap<>();
-    private ArrayList<Queue<Tree>> listRemarkableTreeNotVisitedForAWhile = new ArrayList<>();
+    private Deque<Tree> listRemarkableTreeNotVisitedForAWhile = new LinkedList<>();
 
+    /**
+     * Constructeur de l'association
+     * @param budget le budget de l'association
+     * @param donorsList la liste des donateurs
+     * @param members une énumeration de personne membre de l'association
+     * @param muni la municipalité liée à l'association
+     * @param name le nom de l'association
+     */
     public Organisation(String name, Float budget, ArrayList<Entity> donorsList, Municipality muni, Member... members) {
         super(name);
         this.budget = budget;
@@ -58,6 +64,14 @@ public class Organisation extends Entity {
         this.municipality = muni;
     }
 
+    /**
+     * Constructeur de l'association
+     * @param budget le budget de l'association
+     * @param donorsList la liste des donateurs
+     * @param members un ArrayList de personne membre de l'association
+     * @param muni la municipalité liée à l'association
+     * @param name le nom de l'association
+     */
     public Organisation(String name, Float budget, ArrayList<Entity> donorsList, ArrayList<Member> members, Municipality muni) {
         super(name);
         this.budget = budget;
@@ -75,6 +89,12 @@ public class Organisation extends Entity {
                 "FinancialRecord" + LocalDateTime.now().getYear());
     }
 
+    /**
+     * Constructeur de l'association
+     * @param budget le budget de l'association
+     * @param muni la municipalité liée à l'association
+     * @param name le nom de l'association
+     */
     public Organisation(String name, Float budget, Municipality muni) {
         super(name);
         this.budget = budget;
@@ -86,6 +106,12 @@ public class Organisation extends Entity {
         this.municipality = muni;
     }
 
+    /**
+     * Constructeur de l'association
+     * @param donorsList la liste des donateurs
+     * @param members une énumeration de personne membre de l'association
+     * @param name le nom de l'association
+     */
     public Organisation(String name, ArrayList<Entity> donorsList, Member ...members) {
         super(name);
         this.donorsList = donorsList;
@@ -100,6 +126,13 @@ public class Organisation extends Entity {
                 "FinancialRecord" + LocalDateTime.now().getYear());
     }
 
+    /**
+     * Constructeur de l'association
+     * @param budget le budget de l'association
+     * @param members une énumeration de personne membre de l'association
+     * @param muni la municipalité liée à l'association
+     * @param name le nom de l'association
+     */
     public Organisation(String name, Float budget, Municipality muni, Member ... members) {
         super(name);
         this.budget = budget;
@@ -119,43 +152,104 @@ public class Organisation extends Entity {
 
     // Getters & Setters
 
+    /**
+     * Permet d'obtenir le budget de l'association
+     * @return le budget de l'association
+     */
     public Float getBudget() {
         return budget;
     }
 
+    /**
+     * Permet de changer le budget de l'association
+     * @param budget le nouveau budget
+     */
     public void setBudget(Float budget) {
         this.budget = budget;
     }
 
+    /**
+     * Permet d'obtenir la liste des donateurs
+     * @return la liste de des donateurs
+     */
     public ArrayList<Entity> getDonorsList() {
         return donorsList;
     }
 
+    /**
+     * Permet de changer la liste des donateurs avec une nouvelle
+     * @param donorsList la nouvelle liste de donateurs
+     */
     public void setDonorsList(ArrayList<Entity> donorsList) {
         this.donorsList = donorsList;
     }
 
+    /**
+     * Permet d'obtenir la liste des membres
+     * @return un ArrayList de pair 'Integer, Member' correspondant à l'ID du membre dans l'association lié
+     * membre en question
+     */
     public ArrayList<MutablePair<Integer, Member>> getMembersList() {
         return membersList;
     }
 
+    /**
+     * Permet de changer la liste des membres avec une nouvelle liste
+     * @param membersList la nouvelle liste de membre
+     */
     public void setMembersList(ArrayList<MutablePair<Integer, Member>> membersList) {
         this.membersList = membersList;
     }
 
+    /**
+     * Permet d'obtenir la liste des votes de membres
+     * @return Un array list des files correspondant aux votes du membre
+     */
     public ArrayList<Queue<Tree>> getListVoteMember() {
         return listVoteMember;
     }
 
+    /**
+     * Permet d'obtenir la map mettant en relation un arbre et son nombre de vote dans l'association
+     * @return la map en question
+     */
     public Map<Integer, Integer> getMapTreeVote() {
         return mapTreeVote;
     }
 
+    /**
+     * Permet d'obtenir la map mettant en relation position dans le classement et ID de l'arbre à cette position
+     * Il n'y a que au + 5 arbres dans cette MAP.
+     * @return la map en question
+     */
     public Map<Integer, Integer> getVoteRanking() {
         return voteRanking;
     }
 
+    /**
+     * Permet d'obtenir la map mettant en relation l'ID d'un arbre et sa disponibilité en terme de visite.
+     * Si un membre s'est porté volontaire pour visiter cette arbre le booléen sera TRUE sinon FALSE
+     * @return la map en question
+     */
+    public Map<Integer, Boolean> getMapVisit() {
+        return mapVisit;
+    }
+
+    /**
+     * Permet d'obtenir la file d'arbre correspondant aux arbres remarquables pas visité depuis longtemps.
+     * L'arbre qui a la date de visite la plus vieille sera en premier dans la liste pour attirer le membre vers
+     * celui-ci
+     * @return la file en question
+     */
+    public Deque<Tree> getListRemarkableTreeNotVisitedForAWhile() {
+        return listRemarkableTreeNotVisitedForAWhile;
+    }
+
     // Organisation Operations
+
+    /**
+     * La méthode qui permet d'actualiser l'organisation. C'est une méthode très importante
+     */
     private void update(){
         // Notify members to pay their contibutions
         if (LocalDate.now().getMonthValue() == 12
@@ -193,6 +287,11 @@ public class Organisation extends Entity {
         }
     }
 
+    /**
+     * Permet d'obtenir le nom des membres dans la liste. Ces noms sont ordonés dans un StringBuilder pour l'affichage
+     * dans la méthode toString()
+     * @return Le StringBuilder en question
+     */
     public StringBuilder getNameOfMemberInMemberList(){
         StringBuilder s = new StringBuilder();
         if (membersList.isEmpty()){
@@ -212,8 +311,15 @@ public class Organisation extends Entity {
         }
         return s;
     }
+
     // Function
 
+    /**
+     * Méthode modélisant l'ajout de fonds à l'organisation grâce aux cotisations du membre
+     * @param m le membre qui cotise
+     * @param amount le montant de la cotisation
+     * @return un booléen
+     */
     public boolean addMoneyFromMemberContribution(Member m,float amount){
         // Aux value to locally store value
         ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(m);
@@ -232,11 +338,19 @@ public class Organisation extends Entity {
         return false;
     }
 
+
     public void addDonor(Entity donor){
         this.donorsList.add(donor);
     }
 
 
+    /**
+     * Méthode modélisant la recherche d'un membre dans la liste des membres.
+     * Méthode qui permet de savoir si un membre est dans al liste des membres et si oui de récuperer aussi son index
+     * @param member le membre recherché
+     * @return Une immutable Pair de 'Boolean, Integer'. Le boolean correspond à la présence ou non du membre dans la
+     * liste des membres et le INTEGER à l'index du membre s'il est présent.
+     */
     private ImmutablePair<Boolean, Integer> checkMemberInMemberList(Member member){
         int index =0;
         while (index < membersList.size()){
@@ -248,6 +362,11 @@ public class Organisation extends Entity {
         return new ImmutablePair<>(false, -1);
     }
 
+    /**
+     * Méthode modélisant l'ajout d'un membre à l'organisation
+     * @param member le membre ajouté
+     * @return true ou false selon si l'ajout a été un succès ou pas.
+     */
     public boolean addMember(Member member){
         if (!checkMemberInMemberList(member).getLeft()){
             membersList.add(new MutablePair<Integer, Member>(++numMembers, member));
@@ -266,17 +385,19 @@ public class Organisation extends Entity {
 
     // VOTE's FUNCTION
 
-    // Une fonction pour récupérer tous les votes de chaque membre de l'organisation
-    // La fonction récupère tous les votes de tous les membres de l'association et stocke ça dans listVoteMember
-    // VOTE's FUNCTION
-
+    /**
+     * Permet de récupérer les votes de tous les membres dans une variable d'instance de l'organisation
+     */
     public void getVotesFromMember(){
         for(MutablePair<Integer, Member> m : membersList){
             listVoteMember.add(m.getRight().getVotes());
         }
     }
 
-    // Une fonction pour compter les votes de chaque membre - mapTreeVote
+    /**
+     * Permet de compter les votes. Stocke dans une variable d'instance de l'organisation mapTreeVote l'arbre en clé et
+     * le nombre de vote a son actif en valeur.
+     */
     public void countVote(){
         for(int i = 0 ; i < listVoteMember.size() ; i++){
             listVoteMember.get(i).size();
@@ -293,13 +414,21 @@ public class Organisation extends Entity {
         }
     }
 
-    // Fonction qui setup la map du rang (à faire 1 fois par an au début du nouvel exercice budgétaire, c'est un reset du classement)
-
+    /**
+     * Méthode pour trier une map par valeur
+     * @param map la map a trier
+     * @return la map triée
+     */
     private Map<Integer, Integer> sortMapTreeValeur(Map<Integer, Integer> map){
         return map.entrySet().stream().sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1,e2) -> e1, LinkedHashMap::new));
     }
 
+    /**
+     * Méthode modélisant l'actualisation du classement des votes. Stocke dans une variable d'instance voteRanking
+     * les 5 arbres les plus votés. voteRanking est une map 'Integer, Integer'. Le premier INTEGER est le classement
+     * de l'arbre et le deuxième l'ID de l'arbre en question
+     */
     public void updateVoteRanking(){
         mapTreeVote = sortMapTreeValeur(mapTreeVote);
         Iterator mapIterateValue = mapTreeVote.entrySet().iterator();
@@ -311,9 +440,11 @@ public class Organisation extends Entity {
         }
     }
 
-    // Une fonction pour récuperer les 5 arbres les plus votés et les stocker dans un tableau
-
-
+    /**
+     * Méthode modélisant la suppression d'un membre
+     * @param member le membre à supprimer
+     * @return true or false selon si la suppression du membre a été un succès
+     */
     public boolean removeMember(Member member){
         ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(member);
         if (aux.getLeft()){
@@ -347,6 +478,9 @@ public class Organisation extends Entity {
 //
 //    }
 
+    /**
+     * Méthode modélisant une demande de donation
+     */
     public void askForDonations(){
 //        et qui peuvent ^etre de dierentes natures (ex. services municipaux, entreprises, associations, individus),
 //        mais qui doivent tous pouvoir recevoir une demande ecrite de subvention/don emanant de l'association et,
@@ -372,33 +506,94 @@ public class Organisation extends Entity {
 ////        aucun autre membre n'a deja programme une visite pour cet arbre remarquable. Pour
 //    }
 //
-    void sortByDateTree(){
-
+    /**
+     * Méthode modélisant le tri d'un ArrayList d'arbre par sa date
+     * @return l'arrayList d'arbre trié
+     */
+    private ArrayList<Tree> getSortedTreeByDate(){
+        Collections.sort(municipality.getTrees(), Tree.ComparatorTree);
+        return municipality.getTrees();
     }
 
-    void setupListRemarkableTreeNotVisitedForAWhile(){
-
-    }
-
-    void setupListRemarkableTreeVisit(){
-        for(int i = 0 ; i < municipality.getTrees().size() ; i++){
-            if(!(municipality.getTrees().get(i).isRemarkable())){
-                mapVisit.put(municipality.getTrees().get(i).getTreeID(), false);
+    /**
+     * Méthode modélisant le setup de la variable d'instance listRemarkableTreeNotVisitedForAWhile.
+     * Cette variable est une file qui contient les arbres les moins visités. La tête de liste est l'arbre le moins
+     * visité et ainsi de suite.
+     */
+    private void setupListRemarkableTreeNotVisitedForAWhile(){
+        ArrayList<Tree> sortedTreeByDate = getSortedTreeByDate();
+        // private ArrayList<Queue<Tree>> listRemarkableTreeNotVisitedForAWhile = new ArrayList<>();
+        for(int i = 0 ; i < sortedTreeByDate.size() ; i++){
+            if(!(sortedTreeByDate.get(i).isRemarkable())){
+                listRemarkableTreeNotVisitedForAWhile.addLast(sortedTreeByDate.get(i));
             }
         }
     }
 
-    void allowOrNotVisit(Member m, Tree t){
-        m.toVolunteerOn(t);
-        if(mapVisit.get(t.getTreeID()) ==  false){
-            System.out.println("[ORGANISATION] Visit Accepted for the tree \'" + t.getTreeID() + "\'");
-        }
-        else{
-            System.err.println("[ORGANISATION] Visit Rejected for the tree \'" + t.getTreeID() + "\'. " +
-                    "Tree already been reserved");
+    /**
+     * Méthode modélisant le setup de la liste des arbres remarquables.
+     * Affecte a la variable d'instance 'mapVisit' les données convenues
+     */
+    private void setupListRemarkableTreeVisit(){
+        for(int i = 0 ; i < municipality.getTrees().size() ; i++){
+            if(!(municipality.getTrees().get(i).isRemarkable())){
+                if(municipality.getTrees().get(i).getTreeID() == null){
+                    continue;
+                }
+                else {
+                    mapVisit.put(municipality.getTrees().get(i).getTreeID(), false);
+                }
+            }
         }
     }
 
+    /**
+     * Méthode modélisant l'acceptation ou non d'une demande de visite d'un membre
+     * Si la demande de visite de l'arbre t correspond a un arbre qui n'a pas fait l'objet de demande de visite alors
+     * la demande est automatiquement accepté.
+     * Sinon il est indiqué au membre que la visite est impossible et il lui est indiqué quelques arbres qui n'ont pas
+     * fait l'objet de visite depuis longtemps
+     * @param m le membre qui fait la demande de visite
+     * @return
+     */
+    public void allowOrNotVisit(Member m, Tree t){
+        System.out.println("La fonction s'éxecute");
+        if(t.isRemarkable()){
+            System.out.println("t is remarkable");
+            if(mapVisit.get(t.getTreeID()) ==  false){
+                System.out.println("[ORGANISATION] Visit Accepted for the tree \'" + t.getTreeID() + "\'");
+                mapVisit.put(t.getTreeID(), true);
+                //@TODO : Ajouter les notifications
+            }
+            else{
+                System.err.println("[ORGANISATION] Visit Rejected for the tree \'" + t.getTreeID() + "\'. " +
+                        "Tree already been reserved");
+                System.out.println("Here's a list of remarkable tree not visited for a while : " + listRemarkableTreeNotVisitedForAWhile);
+                //@TODO : Ajouter les notifications
+            }
+        }
+        else{
+            System.out.println("t n'est pas remarkable");
+            System.err.println("[ORGANISATION] Tree not remarkable");
+        }
+
+    }
+
+    /**
+     * Méthode qui regroupe juste les fonctions de setup pour les visites. Utile pour effectuer des tests.
+     */
+    public void doAllVisitFx(){
+        setupListRemarkableTreeNotVisitedForAWhile();
+        setupListRemarkableTreeVisit();
+        System.out.println("ListRemarkableTreeNotVisitedForAWhile : " + listRemarkableTreeNotVisitedForAWhile);
+        System.out.println("ListRemarkableTreeVisit : " + mapVisit);
+    }
+
+    /**
+     * Méthode modélisant le défraiement d'un membre
+     * @param member le membre en question
+     * @param amount le montant du défraiement
+     */
     public void refundMember(Member member, float amount){
 //        membre ayant eectue la visite est defraye pour celle-ci d'un montant xe,
 //        nombre maximum de visites par an.
@@ -420,6 +615,11 @@ public class Organisation extends Entity {
         }
     }
 
+    /**
+     * Méthode modélisant l'envoi des données d'un membre
+     * @param member le membre en question
+     * @return un String correspondant aux données d'un membre
+     */
     public String sendData(Member member){
         // Get memeber ID
         ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(member);
@@ -429,6 +629,10 @@ public class Organisation extends Entity {
         return null;
     }
 
+    /**
+     * Méthode modélisant le paiement d'une facture
+     * @param amount le montant
+     */
     public void payBill(float amount){
 //        Le type de compte en banque de l'association ne lui
 //        permettant d'avoir un solde negatif, un paiement ne pourra ^etre eectue que si la somme correspondante
@@ -443,6 +647,10 @@ public class Organisation extends Entity {
         }
     }
 
+    /**
+     * Méthode modélisant le fait que l'organisation reçoit des fonds
+     * @param amount le montant des fonds reçus
+     */
     public void recieveFunds(float amount){
         this.budget += amount;
         FileManager.writeToRecord(this, financialRecord,"Received Donor Payment", amount, budget);
@@ -515,9 +723,14 @@ public class Organisation extends Entity {
         Organisation org = new Organisation("Tree Lovers", 1000.0f, muni, m1);
 
         //System.out.println(org.municipality.getTrees());
-        org.setupListRemarkableTreeVisit();
-        System.out.println(org.mapVisit);
-        org.payBill(10);
+
+        org.doAllVisitFx();
+
+
+        m1.toVolunteerOn(org, t1);
+
+
+        //org.payBill(10);
         // org.addMember(m2);
         // System.out.println(org.toString());
         /*org.getVotesFromMember();
