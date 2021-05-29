@@ -96,10 +96,11 @@ public class ParserCSV {
                 // Add new tree to list
                 Tree tr = new Tree(treeID, commonName, circumference, height, specie,
                         genre, developmentStage, address, GPS, remarkable);
+
                 parsedData.add(new Tree(treeID, commonName, circumference, height, specie,
                         genre, developmentStage, address, GPS, remarkable));
 
-                System.out.println(tr.toString());
+                //System.out.println(tr.toString());
             }
         }
         catch (IOException | CsvValidationException e) {

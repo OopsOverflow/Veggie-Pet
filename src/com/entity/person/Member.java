@@ -129,6 +129,15 @@ public class Member extends Person {
 
     }
 
+    public void toVolunteerOn(Tree t){
+        if(t.isRemarkable()){
+            System.out.println("[MEMBER] The tree you want to visit is remarkable. Awaiting a response from the ORG");
+        }
+        else{
+            System.err.println("[MEMBER] The tree you want to visit is not remarkable");
+        }
+    }
+
     protected void getMyData(Organisation organisation){
         // fonction qui vérifie que le membre en question est bien présent dans l'organisation
         //probablement une fonction dans la classe organisation telle que :
@@ -164,7 +173,7 @@ public class Member extends Person {
 
         Tree t2 = new Tree(1, "Marronnier", 150, 15, "hippocastanum",
                 "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
-                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
+                new Float[]{(float)48.8632712288,(float)2.39435673087}, true);
 
         Tree t3 = new Tree(2, "Marronnier", 150, 15, "hippocastanum",
                 "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
@@ -197,6 +206,8 @@ public class Member extends Person {
 
         //m1.vote(t6,t7);
         System.out.println(m1.toString());
+
+        m1.toVolunteerOn(t1);
 
         /*Iterator iteratorVals = m1.getVotes().iterator();
         while(iteratorVals.hasNext()){
