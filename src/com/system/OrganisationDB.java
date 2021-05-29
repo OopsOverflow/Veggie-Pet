@@ -5,6 +5,12 @@ import java.sql.*;
 
 public class OrganisationDB {
     // Create the DataBase and connect to it.
+
+    /**
+     * Méthode modélisant la connexion à la base de données
+     * @param name le nom de la base de données
+     * @return un String qui est l'url de la connexion SQLite
+     */
     public static String connect(String name) {
         Connection conn = null;
         // db parameters
@@ -33,7 +39,7 @@ public class OrganisationDB {
     }
 
     /**
-     *
+     * Méthode modélisant la création de la table MEMBRE dans la base de données
      * @param url : SQLite connection string
      */
     public static void createMembersTable(String url) {
@@ -58,6 +64,16 @@ public class OrganisationDB {
         }
     }
 
+    /**
+     * Méthode modélisant l'ajout d'un membre dans la table MEMBRE
+     * @param url l'url de la connexion SQLite
+     * @param id l'id du membre
+     * @param name le prénom du membre
+     * @param lastname le nom du membre
+     * @param dateofbirth la date de naissance du membre
+     * @param registrationdate la date de registration du membre
+     * @param activity l'activité du membre
+     */
     public static void insertMemberData(String url, Integer id, String name, String lastname,
                                         Date dateofbirth, Date registrationdate,  String activity) {
         String sql = "INSERT INTO members (id, name, lastname, dateofbirth, " +
@@ -79,6 +95,12 @@ public class OrganisationDB {
     }
     
     // GDPR
+
+    /**
+     * Méthode modélisant la suppression des données d'un membre
+     * @param url l'url de la connexion SQLite
+     * @param memberID l'idée du membre auquel on veut supprimer les données.
+     */
     public static void deleteMemberData(String url, int memberID) {
         String sql = "UPDATE members SET name = ? , "
                 + "lastname = ? ,"
@@ -102,6 +124,11 @@ public class OrganisationDB {
         }
     }
 
+    /**
+     * Méthode permettant d'afficher tous les membres
+     * @param url l'url de la connexion SQLite
+     * @return
+     */
     public static String fetchMembersData(String url){
         String sql = "SELECT * FROM members";
 
@@ -128,6 +155,12 @@ public class OrganisationDB {
         }
     }
 
+    /**
+     * Méthode modélisant l'affichage des infos d'un membre issue de la table MEMBRE grâce à son ID
+     * @param url l'url de connexion SQLite
+     * @param MemberID l'idée du membre
+     * @return
+     */
     public static String fetchMemberData(String url, int MemberID){
         String sql = "SELECT * "
                 + "FROM members WHERE members.id = ?";
