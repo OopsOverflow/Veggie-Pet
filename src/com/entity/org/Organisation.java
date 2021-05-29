@@ -3,6 +3,7 @@ package com.entity.org;
 import com.entity.Entity;
 import com.entity.admin.Municipality;
 import com.entity.person.Member;
+import com.system.FileManager;
 import com.system.NotificationManager;
 import com.system.OrganisationDB;
 import com.system.Report;
@@ -52,7 +53,7 @@ public class Organisation extends Entity {
             OrganisationDB.insertMemberData(DBURL, numMembers,m.getName(), m.getFamilyName(),
                     m.getDateOfBirth(), m.getLastRegistrationDate(), "");
         }
-        this.financialRecord = createFile(name.replaceAll("\\s+","")  +
+        this.financialRecord = FileManager.createFile(name.replaceAll("\\s+","")  +
                 "FinancialRecord" + LocalDateTime.now().getYear());
         this.municipality = muni;
     }
@@ -70,7 +71,7 @@ public class Organisation extends Entity {
         }
         // .replaceAll() removes white spaces from name
         // Better indexing on cross platform
-        this.financialRecord = createFile(name.replaceAll("\\s+","")  +
+        this.financialRecord = FileManager.createFile(name.replaceAll("\\s+","")  +
                 "FinancialRecord" + LocalDateTime.now().getYear());
     }
 
@@ -79,7 +80,7 @@ public class Organisation extends Entity {
         this.budget = budget;
         this.DBURL = OrganisationDB.connect(name);
         OrganisationDB.createMembersTable(DBURL);
-        this.financialRecord = createFile(name.replaceAll("\\s+","")  +
+        this.financialRecord = FileManager.createFile(name.replaceAll("\\s+","")  +
                 "FinancialRecord" + LocalDateTime.now().getYear());
 
         this.municipality = muni;
@@ -95,7 +96,7 @@ public class Organisation extends Entity {
             OrganisationDB.insertMemberData(DBURL, numMembers,m.getName(), m.getFamilyName(),
                     m.getDateOfBirth(), m.getLastRegistrationDate(), "");
         }
-        this.financialRecord = createFile(name.replaceAll("\\s+","")  +
+        this.financialRecord = FileManager.createFile(name.replaceAll("\\s+","")  +
                 "FinancialRecord" + LocalDateTime.now().getYear());
     }
 
@@ -109,7 +110,7 @@ public class Organisation extends Entity {
             OrganisationDB.insertMemberData(DBURL, numMembers,m.getName(), m.getFamilyName(),
                     m.getDateOfBirth(), m.getLastRegistrationDate(), "");
         }
-        this.financialRecord = createFile(name.replaceAll("\\s+","")  +
+        this.financialRecord = FileManager.createFile(name.replaceAll("\\s+","")  +
                 "FinancialRecord" + LocalDateTime.now().getYear());
 
         this.municipality = muni;
@@ -117,20 +118,20 @@ public class Organisation extends Entity {
 
 
 
-    private File createFile(String fileName) {
-        try {
-            File myObj = new File(fileName + ".txt");
-            if (myObj.createNewFile()) {
-                return myObj;
-            } else {
-                System.err.println("File already exists.");
-                return new File(fileName + ".txt");
-            }
-        } catch (IOException e) {
-            System.err.println("An error occurred.");
-            return this.financialRecord;
-        }
-    }
+//    private File createFile(String fileName) {
+//        try {
+//            File myObj = new File(fileName + ".txt");
+//            if (myObj.createNewFile()) {
+//                return myObj;
+//            } else {
+//                System.err.println("File already exists.");
+//                return new File(fileName + ".txt");
+//            }
+//        } catch (IOException e) {
+//            System.err.println("An error occurred.");
+//            return this.financialRecord;
+//        }
+//    }
     // Getters & Setters
 
     public Float getBudget() {
@@ -201,7 +202,7 @@ public class Organisation extends Entity {
             });
 
             // Create new Budget Files
-            this.financialRecord = createFile(this.getName().replaceAll("\\s+","")  +
+            this.financialRecord = FileManager.createFile(this.getName().replaceAll("\\s+","")  +
                     "FinancialRecord" + LocalDateTime.now().getYear());
 
         }
@@ -236,8 +237,8 @@ public class Organisation extends Entity {
             setBudget(budget+amount);
             System.out.println(String.format("[%s] Got " + amount + "$ from " + m.getName() + " " +
                     m.getFamilyName() + "\n", this.getName()));
-            writeToRecord(financialRecord, String.format("Recieved @Member %d Contribution",
-                    membersList.get(aux.getRight()).getLeft()), amount);
+            FileManager.writeToRecord(this, financialRecord, String.format("Recieved @Member %d Contribution",
+                    membersList.get(aux.getRight()).getLeft()), amount, budget);
         }
         else{
             System.err.println(String.format("[%s] Error : " + m.getName() + " " + m.getFamilyName() +
@@ -339,24 +340,24 @@ public class Organisation extends Entity {
         return false;
     }
 
-    private boolean writeToRecord(File record, String typeOfOperation, float amount){
-        try(FileWriter writer = new FileWriter(financialRecord.getName(),true)){
-            writer.write(String.format("[%s]\nNEW FINANCIAL OPERATION==========\n",this.getName()));
-            writer.write("\tDate : " + LocalDateTime.now() + "\n");
-            writer.write("\tType : " + typeOfOperation + "\n");
-            writer.write("\tAmount : " + amount + "\n");
-            writer.write("\tNew Budget : " + budget + "\n"); // Change to budget must be done before
-            writer.write("END -----------------\n");
-
-            return true;
-        }
-        catch (IOException e) {
-            System.err.println("I/O ERROR : CAN'T WRITE TO FILE" + record.getAbsolutePath());
-            e.printStackTrace();
-            return false;
-        }
-
-    }
+//    private boolean writeToRecord(File record, String typeOfOperation, float amount){
+//        try(FileWriter writer = new FileWriter(financialRecord.getName(),true)){
+//            writer.write(String.format("[%s]\nNEW FINANCIAL OPERATION==========\n",this.getName()));
+//            writer.write("\tDate : " + LocalDateTime.now() + "\n");
+//            writer.write("\tType : " + typeOfOperation + "\n");
+//            writer.write("\tAmount : " + amount + "\n");
+//            writer.write("\tNew Budget : " + budget + "\n"); // Change to budget must be done before
+//            writer.write("END -----------------\n");
+//
+//            return true;
+//        }
+//        catch (IOException e) {
+//            System.err.println("I/O ERROR : CAN'T WRITE TO FILE" + record.getAbsolutePath());
+//            e.printStackTrace();
+//            return false;
+//        }
+//
+//    }
 
     public void askForDonations(){
 //        et qui peuvent ^etre de dierentes natures (ex. services municipaux, entreprises, associations, individus),
@@ -420,7 +421,7 @@ public class Organisation extends Entity {
             // Check if the amount to refund is within budget
             if (budget - amount > 0){
                 budget -= amount;
-                writeToRecord(financialRecord, "Refund @MEMBER " + aux.getRight(), amount);
+                FileManager.writeToRecord(this, financialRecord, "Refund @MEMBER " + aux.getRight(), amount, budget);
             }
             else {
                 System.err.println("INSUFFICIENT FUNDS");
@@ -446,7 +447,7 @@ public class Organisation extends Entity {
 //        existe bien sur le compte bancaire.
         if (budget - amount > 0){
             budget -= amount;
-            writeToRecord(financialRecord, "Bill Payment", amount);
+            FileManager.writeToRecord(this, financialRecord, "Bill Payment", amount, budget);
         }
         else{
             System.err.println("INSUFFICIENT FUNDS");
@@ -455,7 +456,7 @@ public class Organisation extends Entity {
 
     public void recieveFunds(float amount){
         this.budget += amount;
-        writeToRecord(financialRecord,"Received Donor Payment", amount);
+        FileManager.writeToRecord(this, financialRecord,"Received Donor Payment", amount, budget);
     }
 
     @Override
@@ -527,6 +528,7 @@ public class Organisation extends Entity {
         //System.out.println(org.municipality.getTrees());
         org.setupListRemarkableTreeVisit();
         System.out.println(org.mapVisit);
+        org.payBill(10);
         // org.addMember(m2);
         // System.out.println(org.toString());
         /*org.getVotesFromMember();
