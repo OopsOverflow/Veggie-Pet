@@ -43,6 +43,7 @@ public class OrganisationDB {
                 + "	id integer PRIMARY KEY,\n"
                 + "	name text NOT NULL,\n"
                 + "	lastname text NOT NULL,\n"
+                + "	dateofbirth date,\n"
                 + "	registrationdate date NOT NULL,\n"
                 + "	activity text\n"
                 + ");";
@@ -57,17 +58,19 @@ public class OrganisationDB {
         }
     }
 
-    public static void insertMemberData(String url, Integer id, String name, String lastname, Date registrationdate, String activity) {
-        String sql = "INSERT INTO members (id, name, lastname, " +
-                "registrationdate, activity) VALUES(?,?,?,?,?)";
+    public static void insertMemberData(String url, Integer id, String name, String lastname,
+                                        Date dateofbirth, Date registrationdate,  String activity) {
+        String sql = "INSERT INTO members (id, name, lastname, dateofbirth, " +
+                "registrationdate, activity) VALUES(?,?,?,?,?,?)";
 
         try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             pstmt.setString(2, name);
             pstmt.setString(3, lastname);
-            pstmt.setDate(4, registrationdate);
-            pstmt.setString(5, activity);
+            pstmt.setDate(4, dateofbirth);
+            pstmt.setDate(5, registrationdate);
+            pstmt.setString(6, activity);
             pstmt.executeUpdate();
             System.out.println("Values were successfully inserted into DataBase.");
         } catch (SQLException e) {
@@ -78,7 +81,8 @@ public class OrganisationDB {
     // GDPR
     public static void deleteMemberData(String url, int memberID) {
         String sql = "UPDATE members SET name = ? , "
-                + "lastname = ? "
+                + "lastname = ? ,"
+                + "dateofbirth = ?"
                 + "WHERE id = ?";
 
         try (Connection conn = DriverManager.getConnection(url);
@@ -88,7 +92,8 @@ public class OrganisationDB {
             // keep the rest of the data
             pstmt.setString(1, "left");
             pstmt.setString(2, "left");
-            pstmt.setInt(3, memberID);
+            pstmt.setDate(3, null);
+            pstmt.setInt(4, memberID);
             // update
             pstmt.executeUpdate();
             System.out.println("Values were successfully erased from the DataBase.");
@@ -110,6 +115,7 @@ public class OrganisationDB {
                 stb.append(rs.getInt("id") +  "\t" +
                         rs.getString("name") + "\t" +
                         rs.getString("lastname") + "\t" +
+                        rs.getDate("dateofbirth") + "\t" +
                         rs.getDate("registrationdate") + "\t" +
                         rs.getString("activity") +
                         "\n");
@@ -140,6 +146,7 @@ public class OrganisationDB {
                 stb.append(rs.getInt("id") +  "\t" +
                         rs.getString("name") + "\t" +
                         rs.getString("lastname") + "\t" +
+                        rs.getDate("dateofbirth") + "\t" +
                         rs.getDate("registrationdate") + "\t" +
                         rs.getString("activity") + "\n");
             }
