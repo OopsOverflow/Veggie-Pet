@@ -32,7 +32,7 @@ public class GreenSpaces extends Entity{
     }
 
 
-    // TODO: 28/05/2021 INTEGRATE NOTIFICATIONS
+
     public void addToNewsLetter(Entity e){
         // Check if entity is already in the NewsLetter list
         if (!entitiesToNotify.contains(e)){
