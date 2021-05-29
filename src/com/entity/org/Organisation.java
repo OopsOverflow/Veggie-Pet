@@ -188,7 +188,7 @@ public class Organisation extends Entity {
             getVotesFromMember();
             countVote();
             updateVoteRanking();
-            // TODO: 29/05/2021 Send Votes to Municipality
+            municipality.setVotedTrees(this.getVoteRanking());
 
             // Check if memebers paid contibutions or not
             membersList.forEach(m ->

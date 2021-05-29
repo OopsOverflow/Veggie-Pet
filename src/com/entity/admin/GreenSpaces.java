@@ -4,8 +4,12 @@ import com.entity.Entity;
 import com.veggie.*;
 import com.system.NotificationManager;
 
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GreenSpaces extends Entity{
     private final Municipality municipality;
@@ -45,18 +49,20 @@ public class GreenSpaces extends Entity{
         System.out.println(e.getName() + " Is Already Subscribed to The NewsLetter.");
     }
 
-    public void classifyTree(Tree tree){
+    public TimerTask classifyTree(Tree tree, LocalDateTime time){
         NotificationManager.diffuseNotification(this, entitiesToNotify,
-                    "A New Local Remarkable Tree! Check It Out :" +
-                            tree.getAddress(), LocalDateTime.now());
+                    "A local Tree Has Been Recognized as Remarkable! Check It Out :" +
+                            tree.getAddress(), time);
+        return null;
     }
 
     // Classify with known date
-    public void classifyTree(Tree tree, LocalDateTime time){
-        NotificationManager.diffuseNotification(this, entitiesToNotify,
-                    "A Local Tree Has Been Recognized as Remarkable on " + time.toString()
-                            + "! Check It Out :" +
-                            tree.getAddress(), LocalDateTime.now());
+    public void classifyTree(Tree tree){
+        // The Notification can be sent later
+        Timer timer = new Timer(); // creating timer
+        TimerTask task = this.classifyTree(tree, LocalDateTime.now()); // creating timer task
+        timer.schedule(task, new Date()); // scheduling the task
+
     }
 
     public void plantTree(Tree tree){
