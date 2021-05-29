@@ -2,9 +2,10 @@ package com.entity.org;
 
 import com.entity.Entity;
 import com.entity.person.Member;
+import com.system.NotificationManager;
+import com.system.OrganisationDB;
 import com.system.Report;
 import com.veggie.Tree;
-import org.apache.commons.collections4.OrderedMap;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -16,7 +17,6 @@ import java.util.*;
 import java.sql.Date;
 
 import java.io.File;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
@@ -99,9 +99,7 @@ public class Organisation extends Entity {
                 "FinancialRecord" + LocalDateTime.now().getYear());
     }
 
-    /**@TODO Ficher Exercice Budgétaire
-     * @TODO Fichier Exercice chaque année
-     */
+
 
     private File createFile(String fileName) {
         try {
@@ -156,6 +154,42 @@ public class Organisation extends Entity {
     }
 
     // Organisation Operations
+    private void update(){
+        // Notify members to pay their contibutions
+        if (LocalDate.now().getMonthValue() == 12
+                && LocalDate.now().getDayOfMonth() == 31){
+            membersList.forEach(m -> {
+                NotificationManager.sendNotification(this, m.getRight(),
+                        "Please Don't Forget to Pay Your Yearly Contibution", LocalDateTime.now());
+            });
+        }
+
+        // Update the Organisation Structure at each end of the year
+        if (LocalDate.now().getMonthValue() == 1
+                && LocalDate.now().getDayOfMonth() == 1){
+            // Voting at the end of each year
+            getVotesFromMember();
+            countVote();
+            updateVoteRanking();
+            // TODO: 29/05/2021 Send Votes to Municipality
+
+            // Check if memebers paid contibutions or not
+            membersList.forEach(m ->
+            {
+                if (!m.getRight().isPayedContribution()){
+                    // If member didn't pay the yealy contribution
+                    // He data is removed, but we keep track of his
+                    // past activity on the DataBase.
+                    removeMember(m.getRight());
+                }
+            });
+
+            // Create new Budget Files
+            this.financialRecord = createFile(this.getName().replaceAll("\\s+","")  +
+                    "FinancialRecord" + LocalDateTime.now().getYear());
+
+        }
+    }
 
     public StringBuilder getNameOfMemberInMemberList(){
         StringBuilder s = new StringBuilder();
@@ -255,11 +289,6 @@ public class Organisation extends Entity {
     }
 
     // Fonction qui setup la map du rang (à faire 1 fois par an au début du nouvel exercice budgétaire, c'est un reset du classement)
-    public void setupRank(){
-        for(int i = 1 ; i <= 5 ; i++ ){
-            voteRanking.put(i, 0);
-        }
-    }
 
     private Map<Integer, Integer> sortMapTreeValeur(Map<Integer, Integer> map){
         return map.entrySet().stream().sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
@@ -280,14 +309,13 @@ public class Organisation extends Entity {
     // Une fonction pour récuperer les 5 arbres les plus votés et les stocker dans un tableau
 
 
-
-    // TODO: 28/05/2021 Add remove member to DB
     public boolean removeMember(Member member){
         ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(member);
         if (aux.getLeft()){
             // get the member in the the member list using his index
             // leave the member ID, but delete all his info.
             membersList.get(aux.getRight()).setRight(null);
+            OrganisationDB.deleteMemberData(DBURL, aux.getRight());
             System.out.println("Member successfully removed");
             return true;
         }
@@ -319,8 +347,9 @@ public class Organisation extends Entity {
 //        mais qui doivent tous pouvoir recevoir une demande ecrite de subvention/don emanant de l'association et,
         Report report = new Report(this, "Your Donations Keep Us Going",
                 LocalDate.now(), this.financialRecord);
-        //@TODO: NOTIFICATION SYSTEM
-        //donorsList.forEach(x -> sendNotification(this, x, report));
+        // Send Notification to Donors
+        donorsList.forEach(d -> NotificationManager.sendNotificationWithReport(this, d, "Donation Request",
+                report, LocalDateTime.now()));
     }
 
 
@@ -450,7 +479,6 @@ public class Organisation extends Entity {
 
         Organisation org = new Organisation("Tree Lovers", 1000.0f, m1);
 
-        org.setupRank();
 
         // org.addMember(m2);
         // System.out.println(org.toString());

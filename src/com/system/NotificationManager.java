@@ -18,4 +18,10 @@ public class NotificationManager{
             sendNotification(from, dest, content, time);
         });
     }
+
+    public static void sendNotificationWithReport(Entity from, Entity to, String content, Report attachement ,LocalDateTime time){
+        String stb = "[Notification] ------- " + time.toString() + "\n" + "\tFrom : " + from.getName() + "\n" +
+                "\tContent : \n" + content + "\n" + attachement.toString() + "\n";
+        to.appendLetterBox(stb);
+    }
 }
