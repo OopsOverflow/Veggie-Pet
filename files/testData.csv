@@ -1,5 +1,5 @@
 idbase,typeemplacement,domanialite,arrondissement,complementadresse,numero,adresse,idemplacement,libellefrancais,genre,espece,varieteoucultivar,circonferenceencm,hauteurenm,stadedeveloppement,remarquable,"geo_point_2d,,"
-147179,Arbre,CIMETIERE,PARIS 20E ARRDT,,,CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86,A08800086003,Marronnier,Aesculus,hippocastanum,,150,15,Adulte,NON,"48.8632712288,2.394356731,"
+147179,Arbre,CIMETIERE,PARIS 20E ARRDT,,,CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86,A08800086003,Marronnier,Aesculus,hippocastanum,,150,15,Adulte,OUI,"48.8632712288,2.394356731,"
 187503,Arbre,DASCO,PARIS 14E ARRDT,,,PIERRE LAROUSSE (28) ELEM,9931008,Arbre aux quarante ?cus,Ginkgo,biloba,,20,3,Jeune (arbre),NON,"48.8294972209,2.314216793,"
 194396,Arbre,PERIPHERIQUE,PARIS 18E ARRDT,,,TALUS N?23-10,92310126,Noisetier de Byzance,Corylus,colurna,,48,5,Jeune (arbre),NON,"48.9013796832,2.362278585,"
 251653,Arbre,Alignement,PARIS 16E ARRDT,,,AVENUE MARCEAU,501004,Platane,Platanus,x hispanica,,210,15,Adulte,NON,"48.8668662183,2.299315525,"
