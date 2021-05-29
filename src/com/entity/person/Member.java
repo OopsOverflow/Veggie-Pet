@@ -17,7 +17,7 @@ public class Member extends Person {
     private ArrayList<Tree> treeNominations;
     private float CurrentAccount;
     private ArrayList<ImmutablePair<LocalDate, Float>> contributionList = new ArrayList<>();
-    private Queue<Tree> votes = new LinkedList<>();
+    private Deque<Tree> votes = new LinkedList<>();
 
     // Constructeur
     public Member(String name, String familyName, Date dateOfBirth, String address, Date lastRegistrationDate,
@@ -195,7 +195,13 @@ public class Member extends Person {
 
         m1.vote(t1,t2,t3,t4,t5);
 
-        m1.vote(t6,t7);
+        //m1.vote(t6,t7);
         System.out.println(m1.toString());
+
+        /*Iterator iteratorVals = m1.getVotes().iterator();
+        while(iteratorVals.hasNext()){
+            Tree next = (Tree) iteratorVals.next();
+            System.out.println(next.getTreeID());
+        }*/
     }
 }
