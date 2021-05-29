@@ -258,7 +258,7 @@ public class Member extends Person {
 
         m1.vote(t1,t2,t3,t4,t5);
 
-        //m1.vote(t6,t7);
+        m1.vote(t6,t7);
         System.out.println(m1.toString());
 
 
