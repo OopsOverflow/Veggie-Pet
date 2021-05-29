@@ -46,27 +46,17 @@ public class GreenSpaces extends Entity{
     }
 
     public void classifyTree(Tree tree){
-        if (! tree.isRemarkable()) {
-            tree.setRemarkable(true);
-            NotificationManager.diffuseNotification(this, entitiesToNotify,
+        NotificationManager.diffuseNotification(this, entitiesToNotify,
                     "A New Local Remarkable Tree! Check It Out :" +
                             tree.getAddress(), LocalDateTime.now());
-        }
-        else
-            System.out.println("ERROR : TREE IS ALREADY REMARKABLE");
     }
 
     // Classify with known date
     public void classifyTree(Tree tree, LocalDateTime time){
-        if (! tree.isRemarkable()) {
-            tree.setRemarkable(true);
-            NotificationManager.diffuseNotification(this, entitiesToNotify,
-                    "A Local Tree Has Been Recoginzed as Remakable on " + time.toString()
+        NotificationManager.diffuseNotification(this, entitiesToNotify,
+                    "A Local Tree Has Been Recognized as Remarkable on " + time.toString()
                             + "! Check It Out :" +
                             tree.getAddress(), LocalDateTime.now());
-        }
-        else
-            System.out.println("ERROR : TREE IS ALREADY REMARKABLE");
     }
 
     public void plantTree(Tree tree){

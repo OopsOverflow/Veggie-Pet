@@ -1,13 +1,16 @@
 package com.system;
 
+import com.entity.admin.Municipality;
 import com.entity.org.Organisation;
 import com.entity.person.Member;
 import com.veggie.Tree;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.Array;
 import java.time.LocalDate;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Report {
@@ -99,9 +102,12 @@ public class Report {
         Member m1 = new Member("Houssem", "Mahmoud", new Date(1998,04,30), "Somewhere not far from Tunis",
                 new Date(2021,05,23), false, 5000);
 
-        Organisation org = new Organisation("Tree Lovers", 100.0f, m1);
 
-        Report r = new Report(t,m1, "Some", LocalDate.now(), "Ceci est le contenu du report");
-        System.out.println(r);
+        //Municipality muni = new Municipality()
+
+        //Organisation org = new Organisation("Tree Lovers", 100.0f, m1, );
+
+        //Report r = new Report(t,m1, "Some", LocalDate.now(), "Ceci est le contenu du report");
+        //System.out.println(r);
     }
 }
