@@ -40,6 +40,14 @@ public class Organisation extends Entity {
     private Map<Integer, Boolean> mapVisit = new HashMap<>();
     private Deque<Tree> listRemarkableTreeNotVisitedForAWhile = new LinkedList<>();
 
+    /**
+     * Constructeur de l'association
+     * @param budget le budget de l'association
+     * @param donorsList la liste des donateurs
+     * @param members une énumeration de personne membre de l'association
+     * @param muni la municipalité liée à l'association
+     * @param name le nom de l'association
+     */
     public Organisation(String name, Float budget, ArrayList<Entity> donorsList, Municipality muni, Member... members) {
         super(name);
         this.budget = budget;
@@ -56,6 +64,14 @@ public class Organisation extends Entity {
         this.municipality = muni;
     }
 
+    /**
+     * Constructeur de l'association
+     * @param budget le budget de l'association
+     * @param donorsList la liste des donateurs
+     * @param members un ArrayList de personne membre de l'association
+     * @param muni la municipalité liée à l'association
+     * @param name le nom de l'association
+     */
     public Organisation(String name, Float budget, ArrayList<Entity> donorsList, ArrayList<Member> members, Municipality muni) {
         super(name);
         this.budget = budget;
@@ -73,6 +89,12 @@ public class Organisation extends Entity {
                 "FinancialRecord" + LocalDateTime.now().getYear());
     }
 
+    /**
+     * Constructeur de l'association
+     * @param budget le budget de l'association
+     * @param muni la municipalité liée à l'association
+     * @param name le nom de l'association
+     */
     public Organisation(String name, Float budget, Municipality muni) {
         super(name);
         this.budget = budget;
@@ -84,6 +106,12 @@ public class Organisation extends Entity {
         this.municipality = muni;
     }
 
+    /**
+     * Constructeur de l'association
+     * @param donorsList la liste des donateurs
+     * @param members une énumeration de personne membre de l'association
+     * @param name le nom de l'association
+     */
     public Organisation(String name, ArrayList<Entity> donorsList, Member ...members) {
         super(name);
         this.donorsList = donorsList;
@@ -98,6 +126,13 @@ public class Organisation extends Entity {
                 "FinancialRecord" + LocalDateTime.now().getYear());
     }
 
+    /**
+     * Constructeur de l'association
+     * @param budget le budget de l'association
+     * @param members une énumeration de personne membre de l'association
+     * @param muni la municipalité liée à l'association
+     * @param name le nom de l'association
+     */
     public Organisation(String name, Float budget, Municipality muni, Member ... members) {
         super(name);
         this.budget = budget;
@@ -132,51 +167,104 @@ public class Organisation extends Entity {
 //    }
     // Getters & Setters
 
+    /**
+     * Permet d'obtenir le budget de l'association
+     * @return le budget de l'association
+     */
     public Float getBudget() {
         return budget;
     }
 
+    /**
+     * Permet de changer le budget de l'association
+     * @param budget le nouveau budget
+     */
     public void setBudget(Float budget) {
         this.budget = budget;
     }
 
+    /**
+     * Permet d'obtenir la liste des donateurs
+     * @return la liste de des donateurs
+     */
     public ArrayList<Entity> getDonorsList() {
         return donorsList;
     }
 
+    /**
+     * Permet de changer la liste des donateurs avec une nouvelle
+     * @param donorsList la nouvelle liste de donateurs
+     */
     public void setDonorsList(ArrayList<Entity> donorsList) {
         this.donorsList = donorsList;
     }
 
+    /**
+     * Permet d'obtenir la liste des membres
+     * @return un ArrayList de pair 'Integer, Member' correspondant à l'ID du membre dans l'association lié
+     * membre en question
+     */
     public ArrayList<MutablePair<Integer, Member>> getMembersList() {
         return membersList;
     }
 
+    /**
+     * Permet de changer la liste des membres avec une nouvelle liste
+     * @param membersList la nouvelle liste de membre
+     */
     public void setMembersList(ArrayList<MutablePair<Integer, Member>> membersList) {
         this.membersList = membersList;
     }
 
+    /**
+     * Permet d'obtenir la liste des votes de membres
+     * @return Un array list des files correspondant aux votes du membre
+     */
     public ArrayList<Queue<Tree>> getListVoteMember() {
         return listVoteMember;
     }
 
+    /**
+     * Permet d'obtenir la map mettant en relation un arbre et son nombre de vote dans l'association
+     * @return la map en question
+     */
     public Map<Integer, Integer> getMapTreeVote() {
         return mapTreeVote;
     }
 
+    /**
+     * Permet d'obtenir la map mettant en relation position dans le classement et ID de l'arbre à cette position
+     * Il n'y a que au + 5 arbres dans cette MAP.
+     * @return la map en question
+     */
     public Map<Integer, Integer> getVoteRanking() {
         return voteRanking;
     }
 
+    /**
+     * Permet d'obtenir la map mettant en relation l'ID d'un arbre et sa disponibilité en terme de visite.
+     * Si un membre s'est porté volontaire pour visiter cette arbre le booléen sera TRUE sinon FALSE
+     * @return la map en question
+     */
     public Map<Integer, Boolean> getMapVisit() {
         return mapVisit;
     }
 
+    /**
+     * Permet d'obtenir la file d'arbre correspondant aux arbres remarquables pas visité depuis longtemps.
+     * L'arbre qui a la date de visite la plus vieille sera en premier dans la liste pour attirer le membre vers
+     * celui-ci
+     * @return la file en question
+     */
     public Deque<Tree> getListRemarkableTreeNotVisitedForAWhile() {
         return listRemarkableTreeNotVisitedForAWhile;
     }
 
     // Organisation Operations
+
+    /**
+     * La méthode qui permet d'actualiser l'organisation. C'est une méthode très importante
+     */
     private void update(){
         // Notify members to pay their contibutions
         if (LocalDate.now().getMonthValue() == 12
@@ -214,6 +302,11 @@ public class Organisation extends Entity {
         }
     }
 
+    /**
+     * Permet d'obtenir le nom des membres dans la liste. Ces noms sont ordonés dans un StringBuilder pour l'affichage
+     * dans la méthode toString()
+     * @return Le StringBuilder en question
+     */
     public StringBuilder getNameOfMemberInMemberList(){
         StringBuilder s = new StringBuilder();
         if (membersList.isEmpty()){
@@ -233,8 +326,15 @@ public class Organisation extends Entity {
         }
         return s;
     }
+
     // Function
 
+    /**
+     * Méthode modélisant l'ajout de fonds à l'organisation grâce aux cotisations du membre
+     * @param m le membre qui cotise
+     * @param amount le montant de la cotisation
+     * @return un booléen
+     */
     public boolean addMoneyFromMemberContribution(Member m,float amount){
         // Aux value to locally store value
         ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(m);
@@ -254,7 +354,13 @@ public class Organisation extends Entity {
         return false;
     }
 
-
+    /**
+     * Méthode modélisant la recherche d'un membre dans la liste des membres.
+     * Méthode qui permet de savoir si un membre est dans al liste des membres et si oui de récuperer aussi son index
+     * @param member le membre recherché
+     * @return Une immutable Pair de 'Boolean, Integer'. Le boolean correspond à la présence ou non du membre dans la
+     * liste des membres et le INTEGER à l'index du membre s'il est présent.
+     */
     private ImmutablePair<Boolean, Integer> checkMemberInMemberList(Member member){
         int index =0;
         while (index < membersList.size()){
@@ -266,6 +372,11 @@ public class Organisation extends Entity {
         return new ImmutablePair<>(false, -1);
     }
 
+    /**
+     * Méthode modélisant l'ajout d'un membre à l'organisation
+     * @param member le membre ajouté
+     * @return true ou false selon si l'ajout a été un succès ou pas.
+     */
     public boolean addMember(Member member){
         if (!checkMemberInMemberList(member).getLeft()){
             membersList.add(new MutablePair<Integer, Member>(++numMembers, member));
@@ -284,12 +395,19 @@ public class Organisation extends Entity {
 
     // VOTE's FUNCTION
 
+    /**
+     * Permet de récupérer les votes de tous les membres dans une variable d'instance de l'organisation
+     */
     public void getVotesFromMember(){
         for(MutablePair<Integer, Member> m : membersList){
             listVoteMember.add(m.getRight().getVotes());
         }
     }
 
+    /**
+     * Permet de compter les votes. Stocke dans une variable d'instance de l'organisation mapTreeVote l'arbre en clé et
+     * le nombre de vote a son actif en valeur.
+     */
     public void countVote(){
         for(int i = 0 ; i < listVoteMember.size() ; i++){
             listVoteMember.get(i).size();
@@ -306,11 +424,21 @@ public class Organisation extends Entity {
         }
     }
 
+    /**
+     * Méthode pour trier une map par valeur
+     * @param map la map a trier
+     * @return la map triée
+     */
     private Map<Integer, Integer> sortMapTreeValeur(Map<Integer, Integer> map){
         return map.entrySet().stream().sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1,e2) -> e1, LinkedHashMap::new));
     }
 
+    /**
+     * Méthode modélisant l'actualisation du classement des votes. Stocke dans une variable d'instance voteRanking
+     * les 5 arbres les plus votés. voteRanking est une map 'Integer, Integer'. Le premier INTEGER est le classement
+     * de l'arbre et le deuxième l'ID de l'arbre en question
+     */
     public void updateVoteRanking(){
         mapTreeVote = sortMapTreeValeur(mapTreeVote);
         Iterator mapIterateValue = mapTreeVote.entrySet().iterator();
@@ -322,6 +450,11 @@ public class Organisation extends Entity {
         }
     }
 
+    /**
+     * Méthode modélisant la suppression d'un membre
+     * @param member le membre à supprimer
+     * @return true or false selon si la suppression du membre a été un succès
+     */
     public boolean removeMember(Member member){
         ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(member);
         if (aux.getLeft()){
@@ -355,6 +488,9 @@ public class Organisation extends Entity {
 //
 //    }
 
+    /**
+     * Méthode modélisant une demande de donation
+     */
     public void askForDonations(){
 //        et qui peuvent ^etre de dierentes natures (ex. services municipaux, entreprises, associations, individus),
 //        mais qui doivent tous pouvoir recevoir une demande ecrite de subvention/don emanant de l'association et,
