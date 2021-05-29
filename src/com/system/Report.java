@@ -40,22 +40,42 @@ public class Report {
 
     // Getters
 
+    /**
+     * Permet d'obtenir le contenu du rapport
+     * @return un String avec le contenu du rapport
+     */
     public String getContent() {
         return content;
     }
 
+    /**
+     * Permet d'obtenir la date de publication du rapport
+     * @return la date de publication du rapport
+     */
     public LocalDate getDatePublication(){
         return datePublication;
     }
 
+    /**
+     * Permet d'obtenir l'arbre sur lequel le rapport est fait
+     * @return l'arbre sur lequel le rapport est fait
+     */
     public Tree getTree() {
         return tree;
     }
 
+    /**
+     * Permet d'obtenir le membre auteur du rapport
+     * @return le membre auteur du rapport
+     */
     public Member getMember() {
         return member;
     }
 
+    /**
+     * Permet d'obtenir l'organisation en rapport avec le rapport ( :D )
+     * @return l'organisation en question
+     */
     public Organisation getOrganisation() {
         return organisation;
     }
