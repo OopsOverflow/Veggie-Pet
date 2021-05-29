@@ -9,6 +9,10 @@ import java.time.LocalDateTime;
 
 public class FileManager {
 
+    /**
+     * Méthode modélisant la création d'un fichier
+     * @return le fichier créé
+     */
     public static File createFile(String fileName) {
         try {
             File myObj = new File(fileName + ".txt");
@@ -24,6 +28,10 @@ public class FileManager {
         }
     }
 
+    /**
+     * Méthode modélisant l'écriture d'une opération
+     * @return un booléen modélisant la réussite de l'opération
+     */
     public static boolean writeToRecord(Entity origin, File record, String typeOfOperation, float amount, float budget){
         try(FileWriter writer = new FileWriter(record.getName(),true)){
             writer.write(String.format("[%s]\nNEW FINANCIAL OPERATION==========\n",origin.getName()));
