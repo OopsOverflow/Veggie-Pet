@@ -13,7 +13,7 @@ import java.util.TimerTask;
 
 public class GreenSpaces extends Entity{
     private final Municipality municipality;
-    private ArrayList<Entity> entitiesToNotify;
+    private ArrayList<Entity> entitiesToNotify = new ArrayList<>();
 
     /**
      * Constructeur d'un Espace Vert

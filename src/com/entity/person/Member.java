@@ -114,18 +114,22 @@ public class Member extends Person {
     }
 
     // Function
+
     /**
      * Méthode modélisant le paiement de la contribution du membre.
      * @param amount le montant de la contribution
      * @return un booléen pour savoir la méthode s'est bien exécuté
      */
-    public boolean payContribution(float amount){
+    public boolean payContribution(Organisation org, float amount){
         boolean success = false ;
         if(amount <= CurrentAccount) {
             CurrentAccount -= amount;
             contributionList.add(new ImmutablePair<>(LocalDate.now(), amount));
+            org.addMoneyFromMemberContribution(this, amount);
             payedContribution = true;
             success = true;
+
+
         }
         else{
             System.err.println("[Member] Insufficient funds\n");
@@ -251,7 +255,7 @@ public class Member extends Person {
 
         System.out.println(m1.equals(m2));
         System.out.println(m1.toString());
-        m1.payContribution(500);
+
         System.out.println(m1.toString());
 
         System.out.println(m1.getContributionList());
@@ -260,6 +264,8 @@ public class Member extends Person {
 
         m1.vote(t6,t7);
         System.out.println(m1.toString());
+
+        //m1.toVolunteerOn(t1);
 
 
         /*Iterator iteratorVals = m1.getVotes().iterator();
