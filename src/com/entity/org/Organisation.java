@@ -26,7 +26,7 @@ public class Organisation extends Entity {
     private Float budget;
     private static int numMembers = 0;
     private String DBURL;
-    ArrayList<Entity> donorsList;
+    ArrayList<Entity> donorsList = new ArrayList<>();
     Municipality municipality;
 
     // Financial Record
@@ -117,21 +117,6 @@ public class Organisation extends Entity {
     }
 
 
-
-//    private File createFile(String fileName) {
-//        try {
-//            File myObj = new File(fileName + ".txt");
-//            if (myObj.createNewFile()) {
-//                return myObj;
-//            } else {
-//                System.err.println("File already exists.");
-//                return new File(fileName + ".txt");
-//            }
-//        } catch (IOException e) {
-//            System.err.println("An error occurred.");
-//            return this.financialRecord;
-//        }
-//    }
     // Getters & Setters
 
     public Float getBudget() {
@@ -233,7 +218,6 @@ public class Organisation extends Entity {
         // Aux value to locally store value
         ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(m);
         if(aux.getLeft()){
-            m.payContribution(amount);
             setBudget(budget+amount);
             System.out.println(String.format("[%s] Got " + amount + "$ from " + m.getName() + " " +
                     m.getFamilyName() + "\n", this.getName()));
@@ -246,6 +230,10 @@ public class Organisation extends Entity {
         }
 
         return false;
+    }
+
+    public void addDonor(Entity donor){
+        this.donorsList.add(donor);
     }
 
 
@@ -448,6 +436,7 @@ public class Organisation extends Entity {
         if (budget - amount > 0){
             budget -= amount;
             FileManager.writeToRecord(this, financialRecord, "Bill Payment", amount, budget);
+            System.out.println("Payed Bill, Amount : " + amount);
         }
         else{
             System.err.println("INSUFFICIENT FUNDS");

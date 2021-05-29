@@ -13,9 +13,10 @@ public class FileManager {
         try {
             File myObj = new File(fileName + ".txt");
             if (myObj.createNewFile()) {
+                System.out.println("Record Successfully Created");
                 return myObj;
             } else {
-                System.err.println("File already exists.");
+                System.out.println("Connecting to Already existing Record ...");
                 return new File(fileName + ".txt");
             }
         } catch (IOException e) {

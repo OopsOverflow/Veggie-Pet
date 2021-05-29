@@ -85,13 +85,16 @@ public class Member extends Person {
     }
 
     // Function
-    public boolean payContribution(float amount){
+    public boolean payContribution(Organisation org, float amount){
         boolean success = false ;
         if(amount <= CurrentAccount) {
             CurrentAccount -= amount;
             contributionList.add(new ImmutablePair<>(LocalDate.now(), amount));
+            org.addMoneyFromMemberContribution(this, amount);
             payedContribution = true;
             success = true;
+
+
         }
         else{
             System.err.println("[Member] Insufficient funds\n");
@@ -201,17 +204,17 @@ public class Member extends Person {
 
         System.out.println(m1.equals(m2));
         System.out.println(m1.toString());
-        m1.payContribution(500);
+
         System.out.println(m1.toString());
 
         System.out.println(m1.getContributionList());
 
         m1.vote(t1,t2,t3,t4,t5);
 
-        //m1.vote(t6,t7);
+        m1.vote(t6,t7);
         System.out.println(m1.toString());
 
-        m1.toVolunteerOn(t1);
+        //m1.toVolunteerOn(t1);
 
         /*Iterator iteratorVals = m1.getVotes().iterator();
         while(iteratorVals.hasNext()){

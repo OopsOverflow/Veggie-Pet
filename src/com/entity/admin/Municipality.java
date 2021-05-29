@@ -16,16 +16,18 @@ public class Municipality extends Entity {
     final GreenSpaces gs = new GreenSpaces(this);
     private Map<Integer, Integer> votedTrees;
 
-    // Getter
-    public ArrayList<Tree> getTrees() {
-        return (ArrayList<Tree>) trees.clone();
-    }
 
     // Uses test CSV file by default
     public Municipality(String name, String address){
         super(name);
         this.address = address;
 
+    }
+
+    public Municipality(String name, String address, ArrayList<Tree> trees) {
+        super(name);
+        this.address = address;
+        this.trees = trees;
     }
 
     public Municipality(String name, String address, String pathToFile) {
@@ -38,6 +40,11 @@ public class Municipality extends Entity {
     public String getAddress() {
         return address;
     }
+
+    public ArrayList<Tree> getTrees() {
+        return (ArrayList<Tree>) trees.clone();
+    }
+
 
     public void setVotedTrees(Map<Integer, Integer> votedTrees) {
         this.votedTrees = votedTrees;
