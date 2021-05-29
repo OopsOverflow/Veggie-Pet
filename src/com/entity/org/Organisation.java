@@ -17,6 +17,7 @@ import java.sql.Date;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 
 public class Organisation extends Entity {
@@ -32,6 +33,7 @@ public class Organisation extends Entity {
     // Vote
     private ArrayList<Queue<Tree>> listVoteMember = new ArrayList<>();
     private Map<Integer, Integer> mapTreeVote = new HashMap<>();
+    private Map<Integer, Integer> voteRanking = new HashMap<>();
 
     public Organisation(String name, Float budget, ArrayList<Entity> donorsList, Member... members) {
         super(name);
@@ -145,6 +147,14 @@ public class Organisation extends Entity {
         return listVoteMember;
     }
 
+    public Map<Integer, Integer> getMapTreeVote() {
+        return mapTreeVote;
+    }
+
+    public Map<Integer, Integer> getVoteRanking() {
+        return voteRanking;
+    }
+
     // Organisation Operations
 
     public StringBuilder getNameOfMemberInMemberList(){
@@ -219,31 +229,56 @@ public class Organisation extends Entity {
 
     // Une fonction pour récupérer tous les votes de chaque membre de l'organisation
     // La fonction récupère tous les votes de tous les membres de l'association et stocke ça dans listVoteMember
-    private void getVotesFromMember(){
+    // VOTE's FUNCTION
+
+    public void getVotesFromMember(){
         for(MutablePair<Integer, Member> m : membersList){
             listVoteMember.add(m.getRight().getVotes());
         }
     }
 
     // Une fonction pour compter les votes de chaque membre - mapTreeVote
-    private void countVote(){
+    public void countVote(){
         for(int i = 0 ; i < listVoteMember.size() ; i++){
-            for(int j = 0 ; i < listVoteMember.get(i).size() ; j++){
-                if(!(mapTreeVote.containsKey(listVoteMember.get(i).element().getTreeID()))){
-                    mapTreeVote.put(listVoteMember.get(i).element().getTreeID(), new Integer(1));
+            listVoteMember.get(i).size();
+            Iterator iteratorVals = listVoteMember.get(i).iterator();
+            while(iteratorVals.hasNext()){
+                Tree next  = (Tree) iteratorVals.next();
+                if(!(mapTreeVote.containsKey(next.getTreeID()))){
+                    mapTreeVote.put(next.getTreeID(), new Integer(1));
                 }
                 else{
-                    // récupérer le int du vote et faire ++ comme ça on aura le nombre de vote
-                    mapTreeVote.get("");
+                    mapTreeVote.put(next.getTreeID(), mapTreeVote.get(next.getTreeID()) + 1);
                 }
             }
         }
     }
 
-    // Une fonction pour parcourir et avoir le classement des votes
+    // Fonction qui setup la map du rang (à faire 1 fois par an au début du nouvel exercice budgétaire, c'est un reset du classement)
+    public void setupRank(){
+        for(int i = 1 ; i <= 5 ; i++ ){
+            voteRanking.put(i, 0);
+        }
+    }
 
+    private Map<Integer, Integer> sortMapTreeValeur(Map<Integer, Integer> map){
+        return map.entrySet().stream().sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1,e2) -> e1, LinkedHashMap::new));
+    }
+
+    public void updateVoteRanking(){
+        mapTreeVote = sortMapTreeValeur(mapTreeVote);
+        Iterator mapIterateValue = mapTreeVote.entrySet().iterator();
+        int i = 1;
+        while(mapIterateValue.hasNext() && i <= 5) {
+            Map.Entry m = (Map.Entry) mapIterateValue.next();
+            voteRanking.put(i, (int)m.getKey());
+            i++;
+        }
+    }
 
     // Une fonction pour récuperer les 5 arbres les plus votés et les stocker dans un tableau
+
 
 
     // TODO: 28/05/2021 Add remove member to DB
@@ -377,6 +412,14 @@ public class Organisation extends Entity {
                 new Date(2000, 05, 01), "Antony",
                 new Date(2021, 05, 25), false, 15000);
 
+        Member m5 = new Member("Rayane", "Hammadou",
+                new Date(2000, 05, 01), "Antony",
+                new Date(2021, 05, 25), false, 15000);
+
+        Member m6 = new Member("Rayane", "Hammadou",
+                new Date(2000, 05, 01), "Antony",
+                new Date(2021, 05, 25), false, 15000);
+
         Tree t1 = new Tree(147179, "Marronnier", 150, 15, "hippocastanum",
                 "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
                 new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
@@ -405,17 +448,36 @@ public class Organisation extends Entity {
                 "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
                 new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
 
-        // Organisation org = new Organisation("Tree Lovers", 1000.0f, m1);
+        Organisation org = new Organisation("Tree Lovers", 1000.0f, m1);
+
+        org.setupRank();
 
         // org.addMember(m2);
         // System.out.println(org.toString());
         /*org.getVotesFromMember();
         System.out.println(org.getListVoteMember());*/
+        org.addMember(m2);
+        org.addMember(m3);
+        org.addMember(m4);
+        org.addMember(m5);
+        org.addMember(m6);
 
         m2.vote(t1,t2,t3);
         m1.vote(t1,t3,t5);
         m3.vote(t1,t4,t5);
         m4.vote(t1,t6,t7);
+        m5.vote(t1,t5,t6,t3);
+        m6.vote(t1,t2,t3,t4,t5);
+
+        org.getVotesFromMember();
+        System.out.println(org.getListVoteMember());
+        org.countVote();
+        System.out.println(org.getMapTreeVote());
+
+        org.updateVoteRanking();
+
+        System.out.println("Affichage de la map \'voteRanking\' : " + org.voteRanking);
+
 
         //org.addMoneyFromMemberContribution(m1, 200);
         // Added time delays for dramatic effect
@@ -435,12 +497,5 @@ public class Organisation extends Entity {
         //org.financialRecord.delete();
         //System.out.println(org.getMembersList());
 
-        Map<String, Integer> map = new HashMap<>();
-
-        map.put("key1", 1);
-        map.put("key2", 1);
-        //map.put("key3", new Integer(1));
-
-        System.out.println(map.get("key3")); // Trouver comment incrémenter une valeur dans une map a partir de sa clé
     }
 }

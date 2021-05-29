@@ -164,7 +164,8 @@ public class OrganisationDB {
         System.out.println(fetchMemberData(url, 2));
 
 
-        //fetchMembersData(url);
+        System.out.println(fetchMembersData(url));
+
         // Delete the DataBase after each use; At least for now.
 //        File data = new File("src\\com\\entity\\org\\TreeLovers.db");
 //        data.delete();
