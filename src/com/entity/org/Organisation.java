@@ -40,10 +40,11 @@ public class Organisation extends Entity {
         this.budget = budget;
         this.donorsList = donorsList;
         this.DBURL = OrganisationDB.connect(name);
+        OrganisationDB.createMembersTable(DBURL);
         for (Member m : members){
             membersList.add(new MutablePair<>(++numMembers, m));
             OrganisationDB.insertMemberData(DBURL, numMembers,m.getName(), m.getFamilyName(),
-                    (java.sql.Date) m.getLastRegistrationDate(), "");
+                    m.getDateOfBirth(), m.getLastRegistrationDate(), "");
         }
         this.financialRecord = createFile(name.replaceAll("\\s+","")  +
                 "FinancialRecord" + LocalDateTime.now().getYear());
@@ -54,10 +55,11 @@ public class Organisation extends Entity {
         this.budget = budget;
         this.donorsList = donorsList;
         this.DBURL = OrganisationDB.connect(name);
+        OrganisationDB.createMembersTable(DBURL);
         for (Member m : members){
             membersList.add(new MutablePair<>(++numMembers, m));
             OrganisationDB.insertMemberData(DBURL, numMembers,m.getName(), m.getFamilyName(),
-                    (java.sql.Date) m.getLastRegistrationDate(), "");
+                    m.getDateOfBirth(), m.getLastRegistrationDate(), "");
         }
         // .replaceAll() removes white spaces from name
         // Better indexing on cross platform
@@ -69,6 +71,7 @@ public class Organisation extends Entity {
         super(name);
         this.budget = budget;
         this.DBURL = OrganisationDB.connect(name);
+        OrganisationDB.createMembersTable(DBURL);
         this.financialRecord = createFile(name.replaceAll("\\s+","")  +
                 "FinancialRecord" + LocalDateTime.now().getYear());
     }
@@ -77,10 +80,11 @@ public class Organisation extends Entity {
         super(name);
         this.donorsList = donorsList;
         this.DBURL = OrganisationDB.connect(name);
+        OrganisationDB.createMembersTable(DBURL);
         for (Member m : members){
             membersList.add(new MutablePair<>(++numMembers, m));
             OrganisationDB.insertMemberData(DBURL, numMembers,m.getName(), m.getFamilyName(),
-                    (java.sql.Date) m.getLastRegistrationDate(), "");
+                    m.getDateOfBirth(), m.getLastRegistrationDate(), "");
         }
         this.financialRecord = createFile(name.replaceAll("\\s+","")  +
                 "FinancialRecord" + LocalDateTime.now().getYear());
@@ -90,10 +94,11 @@ public class Organisation extends Entity {
         super(name);
         this.budget = budget;
         this.DBURL = OrganisationDB.connect(name);
+        OrganisationDB.createMembersTable(DBURL);
         for (Member m : members){
             membersList.add(new MutablePair<>(++numMembers, m));
             OrganisationDB.insertMemberData(DBURL, numMembers,m.getName(), m.getFamilyName(),
-                    (java.sql.Date) m.getLastRegistrationDate(), "");
+                    m.getDateOfBirth(), m.getLastRegistrationDate(), "");
         }
         this.financialRecord = createFile(name.replaceAll("\\s+","")  +
                 "FinancialRecord" + LocalDateTime.now().getYear());
@@ -248,7 +253,7 @@ public class Organisation extends Entity {
             membersList.add(new MutablePair<Integer, Member>(++numMembers, member));
             System.out.println("Affichage du membre quand il a été ajouté : index = " + numMembers + " ; prénom du membre : " + member.getName());
             OrganisationDB.insertMemberData(DBURL, numMembers, member.getName(), member.getFamilyName(),
-                    (java.sql.Date) member.getLastRegistrationDate(), "");
+                    member.getDateOfBirth(), member.getLastRegistrationDate(), "");
             return true;
         }
         else{
@@ -389,15 +394,15 @@ public class Organisation extends Entity {
         }
     }
 
-//    void sendData(Member){
-////        representation (dans un format a specier) de l'en-
-////        semble de ses donnees personnelles (nom, prenom, date de naissance, adresse, date de derniere inscription,
-////                liste de ses cotisations annuelles).
-////        Est joint a cette demande
-////        le dernier rapport d'activite de l'association qui contient un point budgetaire (recettes et depenses) et
-////        une synthese des activites pour l'exercice precedent.
-//    }
-//
+    public String sendData(Member member){
+        // Get memeber ID
+        ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(member);
+        if (aux.getLeft()){
+            return OrganisationDB.fetchMemberData(DBURL, aux.getRight());
+        }
+        return null;
+    }
+
     public void payBill(float amount){
 //        Le type de compte en banque de l'association ne lui
 //        permettant d'avoir un solde negatif, un paiement ne pourra ^etre eectue que si la somme correspondante
@@ -489,7 +494,8 @@ public class Organisation extends Entity {
         org.addMember(m4);
         org.addMember(m5);
         org.addMember(m6);
-
+        org.removeMember(m1);
+        org.removeMember(m6);
         m2.vote(t1,t2,t3);
         m1.vote(t1,t3,t5);
         m3.vote(t1,t4,t5);

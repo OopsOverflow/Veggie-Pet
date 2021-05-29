@@ -133,10 +133,14 @@ public class Member extends Person {
         // fonction qui vérifie que le membre en question est bien présent dans l'organisation
         //probablement une fonction dans la classe organisation telle que :
         // Organisation.isMember(Member m) -> test si le Member m est dans la liste des membres.
+
     }
 
     public void leaveOrganisation(Organisation organisation){
-
+        if (organisation.removeMember(this))
+            System.out.println("Successfully Left Organisation " + organisation.getName());
+        else
+            System.out.println("You are not a member of this organisation.");
     }
 
     @Override
