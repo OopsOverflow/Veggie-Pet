@@ -1,6 +1,6 @@
 package com.entity;
 
-import com.entity.admin.Organisation;
+import com.entity.org.Organisation;
 
 public class Entity {
     private String name;

@@ -1,6 +1,5 @@
-package com.entity.admin;
+package com.entity.org;
 
-import com.entity.Donor;
 import com.entity.Entity;
 import com.entity.person.Member;
 import com.system.Report;
@@ -24,7 +23,7 @@ public class Organisation extends Entity {
     private Float budget;
     private static int numMembers = 0;
     private String DBURL;
-    ArrayList<Donor> donorsList;
+    ArrayList<Entity> donorsList;
 
     // Financial Record
     File financialRecord;
@@ -34,7 +33,7 @@ public class Organisation extends Entity {
     private ArrayList<Queue<Tree>> listVoteMember = new ArrayList<>();
     private Map<Integer, Integer> mapTreeVote = new HashMap<>();
 
-    public Organisation(String name, Float budget, ArrayList<Donor> donorsList, Member... members) {
+    public Organisation(String name, Float budget, ArrayList<Entity> donorsList, Member... members) {
         super(name);
         this.budget = budget;
         this.donorsList = donorsList;
@@ -44,10 +43,11 @@ public class Organisation extends Entity {
             OrganisationDB.insertMemberData(DBURL, numMembers,m.getName(), m.getFamilyName(),
                     (java.sql.Date) m.getLastRegistrationDate(), "");
         }
-        this.financialRecord = createFile(name.replaceAll("\\s+","")  + "FinancialRecord");
+        this.financialRecord = createFile(name.replaceAll("\\s+","")  +
+                "FinancialRecord" + LocalDateTime.now().getYear());
     }
 
-    public Organisation(String name, Float budget, ArrayList<Donor> donorsList, ArrayList<Member> members) {
+    public Organisation(String name, Float budget, ArrayList<Entity> donorsList, ArrayList<Member> members) {
         super(name);
         this.budget = budget;
         this.donorsList = donorsList;
@@ -59,17 +59,19 @@ public class Organisation extends Entity {
         }
         // .replaceAll() removes white spaces from name
         // Better indexing on cross platform
-        this.financialRecord = createFile(name.replaceAll("\\s+","")  + "FinancialRecord");
+        this.financialRecord = createFile(name.replaceAll("\\s+","")  +
+                "FinancialRecord" + LocalDateTime.now().getYear());
     }
 
     public Organisation(String name, Float budget) {
         super(name);
         this.budget = budget;
         this.DBURL = OrganisationDB.connect(name);
-        this.financialRecord = createFile(name.replaceAll("\\s+","")  + "FinancialRecord");
+        this.financialRecord = createFile(name.replaceAll("\\s+","")  +
+                "FinancialRecord" + LocalDateTime.now().getYear());
     }
 
-    public Organisation(String name, ArrayList<Donor> donorsList, Member ...members) {
+    public Organisation(String name, ArrayList<Entity> donorsList, Member ...members) {
         super(name);
         this.donorsList = donorsList;
         this.DBURL = OrganisationDB.connect(name);
@@ -78,7 +80,8 @@ public class Organisation extends Entity {
             OrganisationDB.insertMemberData(DBURL, numMembers,m.getName(), m.getFamilyName(),
                     (java.sql.Date) m.getLastRegistrationDate(), "");
         }
-        this.financialRecord = createFile(name.replaceAll("\\s+","")  + "FinancialRecord");
+        this.financialRecord = createFile(name.replaceAll("\\s+","")  +
+                "FinancialRecord" + LocalDateTime.now().getYear());
     }
 
     public Organisation(String name, Float budget, Member ... members) {
@@ -90,7 +93,8 @@ public class Organisation extends Entity {
             OrganisationDB.insertMemberData(DBURL, numMembers,m.getName(), m.getFamilyName(),
                     (java.sql.Date) m.getLastRegistrationDate(), "");
         }
-        this.financialRecord = createFile(name.replaceAll("\\s+","")  + "FinancialRecord");
+        this.financialRecord = createFile(name.replaceAll("\\s+","")  +
+                "FinancialRecord" + LocalDateTime.now().getYear());
     }
 
     /**@TODO Ficher Exercice Budgétaire
@@ -121,11 +125,11 @@ public class Organisation extends Entity {
         this.budget = budget;
     }
 
-    public ArrayList<Donor> getDonorsList() {
+    public ArrayList<Entity> getDonorsList() {
         return donorsList;
     }
 
-    public void setDonorsList(ArrayList<Donor> donorsList) {
+    public void setDonorsList(ArrayList<Entity> donorsList) {
         this.donorsList = donorsList;
     }
 
@@ -435,7 +439,7 @@ public class Organisation extends Entity {
 
         map.put("key1", 1);
         map.put("key2", 1);
-        map.put("key3", new Integer(1));
+        //map.put("key3", new Integer(1));
 
         System.out.println(map.get("key3")); // Trouver comment incrémenter une valeur dans une map a partir de sa clé
     }
