@@ -38,34 +38,59 @@ public class Member extends Person {
     }
 
     // Getter
+
+    /**
+     * Permet d'obtenir la dernière date de Registration
+     * @return la dernière date de Registration
+     */
     public Date getLastRegistrationDate() {
         return lastRegistrationDate;
     }
 
+    /**
+     * Permet de savoir si le membre a payé sa contribution a l'association
+     * @return Le booléen payedContribution
+     */
     public boolean isPayedContribution() {
         return payedContribution;
     }
 
+    /**
+     * Permet d'obtenir les nominations d'arbres du membre
+     * @return un array list des arbres nominés
+     */
     public ArrayList<Tree> getTreeNominations() {
         return treeNominations;
     }
 
+    /**
+     * Permet d'obtenir le compte courant du membre (son argent)
+     * @return un float du compte courant
+     */
     public float getCurrentAccount() {
         return CurrentAccount;
     }
 
+    /**
+     * Permet d'obtenir la liste des contributions du membre
+     * @return un ArrayList de pair 'Date,Float'
+     */
     public ArrayList<ImmutablePair<LocalDate, Float>> getContributionList() {
         return contributionList;
     }
 
-    public String getTextVotes() {
-        return String.format("[%s] a voté pour les arbres : " + getIdVotes(), this.getName());
-    }
-
+    /**
+     * Permet d'obtenir les votes du membre
+     * @return une file de 'Tree'
+     */
     public Queue<Tree> getVotes() {
         return votes;
     }
 
+    /**
+     * Permet d'obtenir les votes du membre dans un StringBuilder pour faire un affichage dans la méthode toString()
+     * @return un StringBuilder avec les id des arbres votés par le membre.
+     */
     private StringBuilder getIdVotes (){
         StringBuilder s = new StringBuilder();
         int cpt = 0;
@@ -80,11 +105,20 @@ public class Member extends Person {
     }
 
     // Setter
+    /**
+     * Permet de modifier la liste des contribution du membre
+     * @param contributionList la nouvelle liste de paire 'Date,Float'
+     */
     public void setContributionList(ArrayList<ImmutablePair<LocalDate, Float>> contributionList) {
         this.contributionList = contributionList;
     }
 
     // Function
+    /**
+     * Méthode modélisant le paiement de la contribution du membre.
+     * @param amount le montant de la contribution
+     * @return un booléen pour savoir la méthode s'est bien exécuté
+     */
     public boolean payContribution(float amount){
         boolean success = false ;
         if(amount <= CurrentAccount) {
@@ -98,7 +132,13 @@ public class Member extends Person {
         }
         return success;
     }
-
+    /**
+     * Méthode modélisant le vote d'un membre pour un arbre. Si le membre vote pour plus de 5 arbres, il lui est
+     * demandé s'il veut oui ou non validé son changement de vote, car seulement 5 votes sont possibles pour un membre.
+     * Si le membre dit oui la file est actualisée et le vote le plus ancien disparait au profit du nouveau.
+     * @param trees
+     * @return
+     */
     public void vote(Tree ...trees){
         for(Tree t : trees){
             if(votes.size() >= 5){
@@ -129,15 +169,21 @@ public class Member extends Person {
 
     }
 
-    public void toVolunteerOn(Tree t){
-        if(t.isRemarkable()){
-            System.out.println("[MEMBER] The tree you want to visit is remarkable. Awaiting a response from the ORG");
-        }
-        else{
-            System.err.println("[MEMBER] The tree you want to visit is not remarkable");
-        }
+    /**
+     * Méthode modélisant le volontariat d'un membre pour visiter un arbre en representant une association.
+     * Apelle la méthode allowOrNotVisit() de la classe Organisation
+     * @param o l'organisation que le membre veut representer lors de la visite
+     * @param t l'arbre que le membre visité
+     * @return
+     */
+    public void toVolunteerOn(Organisation o, Tree t){
+        o.allowOrNotVisit(this, t);
     }
 
+    /**
+     * Méthode qui permet à un membre de voir les données qu'a l'organisation
+     * @param organisation le membre demande les infos qu'a 'organisation' a son sujet
+     */
     protected void getMyData(Organisation organisation){
         // fonction qui vérifie que le membre en question est bien présent dans l'organisation
         //probablement une fonction dans la classe organisation telle que :
@@ -145,6 +191,10 @@ public class Member extends Person {
 
     }
 
+    /**
+     * Méthode modélisant le départ d'un membre d'une organisation.
+     * @param organisation l'organisation quittée par le membre
+     */
     public void leaveOrganisation(Organisation organisation){
         if (organisation.removeMember(this))
             System.out.println("Successfully Left Organisation " + organisation.getName());
@@ -211,7 +261,6 @@ public class Member extends Person {
         //m1.vote(t6,t7);
         System.out.println(m1.toString());
 
-        m1.toVolunteerOn(t1);
 
         /*Iterator iteratorVals = m1.getVotes().iterator();
         while(iteratorVals.hasNext()){

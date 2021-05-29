@@ -2,7 +2,11 @@ package com.veggie;
 
 import com.system.Report;
 
+import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
 
 
 public class Tree {
@@ -18,6 +22,7 @@ public class Tree {
     private Float[] GPS;
     private boolean remarkable;
     private ArrayList<Report> listReport;
+    private Date lastVisit;
 
 
     // Constructor
@@ -34,6 +39,7 @@ public class Tree {
         this.address = address;
         this.GPS = GPS;
         this.remarkable = remarkable;
+        this.lastVisit = new Date(1900,01,01);
     }
 
     // Getters & Setters
@@ -77,6 +83,10 @@ public class Tree {
         return remarkable;
     }
 
+    public Date getLastVisit() {
+        return lastVisit;
+    }
+
     public ArrayList<Report> getListReport() {
         return listReport;
     }
@@ -87,6 +97,14 @@ public class Tree {
         else
             this.remarkable = remarkable;
     }
+
+    public static Comparator<Tree> ComparatorTree = new Comparator<Tree>() {
+        @Override
+        public int compare(Tree o1, Tree o2) {
+            return o1.getLastVisit().compareTo(o2.getLastVisit());
+        }
+    };
+
 
     @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
     @Override
@@ -101,6 +119,7 @@ public class Tree {
         treeSTB.append("\tAddress : \t" + address + "\n");
         treeSTB.append("\tGPS Coordinates : \t" + GPS[0] + "," + GPS[1] + "\n");
         treeSTB.append("\tRemarkable : \t" + remarkable + "\n");
+        treeSTB.append("\tLast Visit : \t" + lastVisit + "\n");
 
 
         return treeSTB.toString();

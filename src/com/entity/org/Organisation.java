@@ -11,8 +11,6 @@ import com.veggie.Tree;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -40,7 +38,7 @@ public class Organisation extends Entity {
 
     // Visit
     private Map<Integer, Boolean> mapVisit = new HashMap<>();
-    private ArrayList<Queue<Tree>> listRemarkableTreeNotVisitedForAWhile = new ArrayList<>();
+    private Deque<Tree> listRemarkableTreeNotVisitedForAWhile = new LinkedList<>();
 
     public Organisation(String name, Float budget, ArrayList<Entity> donorsList, Municipality muni, Member... members) {
         super(name);
@@ -170,6 +168,14 @@ public class Organisation extends Entity {
         return voteRanking;
     }
 
+    public Map<Integer, Boolean> getMapVisit() {
+        return mapVisit;
+    }
+
+    public Deque<Tree> getListRemarkableTreeNotVisitedForAWhile() {
+        return listRemarkableTreeNotVisitedForAWhile;
+    }
+
     // Organisation Operations
     private void update(){
         // Notify members to pay their contibutions
@@ -278,17 +284,12 @@ public class Organisation extends Entity {
 
     // VOTE's FUNCTION
 
-    // Une fonction pour récupérer tous les votes de chaque membre de l'organisation
-    // La fonction récupère tous les votes de tous les membres de l'association et stocke ça dans listVoteMember
-    // VOTE's FUNCTION
-
     public void getVotesFromMember(){
         for(MutablePair<Integer, Member> m : membersList){
             listVoteMember.add(m.getRight().getVotes());
         }
     }
 
-    // Une fonction pour compter les votes de chaque membre - mapTreeVote
     public void countVote(){
         for(int i = 0 ; i < listVoteMember.size() ; i++){
             listVoteMember.get(i).size();
@@ -305,8 +306,6 @@ public class Organisation extends Entity {
         }
     }
 
-    // Fonction qui setup la map du rang (à faire 1 fois par an au début du nouvel exercice budgétaire, c'est un reset du classement)
-
     private Map<Integer, Integer> sortMapTreeValeur(Map<Integer, Integer> map){
         return map.entrySet().stream().sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1,e2) -> e1, LinkedHashMap::new));
@@ -322,9 +321,6 @@ public class Organisation extends Entity {
             i++;
         }
     }
-
-    // Une fonction pour récuperer les 5 arbres les plus votés et les stocker dans un tableau
-
 
     public boolean removeMember(Member member){
         ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(member);
@@ -384,31 +380,62 @@ public class Organisation extends Entity {
 ////        aucun autre membre n'a deja programme une visite pour cet arbre remarquable. Pour
 //    }
 //
-    void sortByDateTree(){
-
+    private ArrayList<Tree> getSortedTreeByDate(){
+        Collections.sort(municipality.getTrees(), Tree.ComparatorTree);
+        return municipality.getTrees();
     }
 
-    void setupListRemarkableTreeNotVisitedForAWhile(){
-
-    }
-
-    void setupListRemarkableTreeVisit(){
-        for(int i = 0 ; i < municipality.getTrees().size() ; i++){
-            if(!(municipality.getTrees().get(i).isRemarkable())){
-                mapVisit.put(municipality.getTrees().get(i).getTreeID(), false);
+    private void setupListRemarkableTreeNotVisitedForAWhile(){
+        ArrayList<Tree> sortedTreeByDate = getSortedTreeByDate();
+        // private ArrayList<Queue<Tree>> listRemarkableTreeNotVisitedForAWhile = new ArrayList<>();
+        for(int i = 0 ; i < sortedTreeByDate.size() ; i++){
+            if(!(sortedTreeByDate.get(i).isRemarkable())){
+                listRemarkableTreeNotVisitedForAWhile.addLast(sortedTreeByDate.get(i));
             }
         }
     }
 
-    void allowOrNotVisit(Member m, Tree t){
-        m.toVolunteerOn(t);
-        if(mapVisit.get(t.getTreeID()) ==  false){
-            System.out.println("[ORGANISATION] Visit Accepted for the tree \'" + t.getTreeID() + "\'");
+    private void setupListRemarkableTreeVisit(){
+        for(int i = 0 ; i < municipality.getTrees().size() ; i++){
+            if(!(municipality.getTrees().get(i).isRemarkable())){
+                if(municipality.getTrees().get(i).getTreeID() == null){
+                    continue;
+                }
+                else {
+                    mapVisit.put(municipality.getTrees().get(i).getTreeID(), false);
+                }
+            }
+        }
+    }
+
+    public void allowOrNotVisit(Member m, Tree t){
+        System.out.println("La fonction s'éxecute");
+        if(t.isRemarkable()){
+            System.out.println("t is remarkable");
+            if(mapVisit.get(t.getTreeID()) ==  false){
+                System.out.println("[ORGANISATION] Visit Accepted for the tree \'" + t.getTreeID() + "\'");
+                mapVisit.put(t.getTreeID(), true);
+                //@TODO : Ajouter les notifications
+            }
+            else{
+                System.err.println("[ORGANISATION] Visit Rejected for the tree \'" + t.getTreeID() + "\'. " +
+                        "Tree already been reserved");
+                System.out.println("Here's a list of remarkable tree not visited for a while : " + listRemarkableTreeNotVisitedForAWhile);
+                //@TODO : Ajouter les notifications
+            }
         }
         else{
-            System.err.println("[ORGANISATION] Visit Rejected for the tree \'" + t.getTreeID() + "\'. " +
-                    "Tree already been reserved");
+            System.out.println("t n'est pas remarkable");
+            System.err.println("[ORGANISATION] Tree not remarkable");
         }
+
+    }
+
+    public void doAllVisitFx(){
+        setupListRemarkableTreeNotVisitedForAWhile();
+        setupListRemarkableTreeVisit();
+        System.out.println("ListRemarkableTreeNotVisitedForAWhile : " + listRemarkableTreeNotVisitedForAWhile);
+        System.out.println("ListRemarkableTreeVisit : " + mapVisit);
     }
 
     public void refundMember(Member member, float amount){
@@ -526,9 +553,14 @@ public class Organisation extends Entity {
         Organisation org = new Organisation("Tree Lovers", 1000.0f, muni, m1);
 
         //System.out.println(org.municipality.getTrees());
-        org.setupListRemarkableTreeVisit();
-        System.out.println(org.mapVisit);
-        org.payBill(10);
+
+        org.doAllVisitFx();
+
+
+        m1.toVolunteerOn(org, t1);
+
+
+        //org.payBill(10);
         // org.addMember(m2);
         // System.out.println(org.toString());
         /*org.getVotesFromMember();
