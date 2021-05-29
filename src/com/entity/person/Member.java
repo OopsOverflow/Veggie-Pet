@@ -1,13 +1,10 @@
 package com.entity.person;
 
-import com.entity.admin.Organisation;
-import com.entity.admin.OrganisationDB;
+import com.entity.org.Organisation;
 import com.system.Report;
 import com.veggie.Tree;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.MutablePair;
-
 
 
 import java.time.LocalDate;

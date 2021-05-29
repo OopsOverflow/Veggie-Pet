@@ -1,6 +1,5 @@
-package com.entity.admin;
+package com.entity.org;
 
-import com.entity.Donor;
 import com.entity.Entity;
 import com.entity.person.Member;
 import com.system.Report;
@@ -22,14 +21,14 @@ public class Organisation extends Entity {
     private Float budget;
     private static int numMembers = 0;
     private String DBURL;
-    ArrayList<Donor> donorsList;
+    ArrayList<Entity> donorsList;
 
     File financialRecord;
     private ArrayList<MutablePair<Integer, Member>> membersList = new ArrayList<>();
 
 
 
-    public Organisation(String name, Float budget, ArrayList<Donor> donorsList, Member... members) {
+    public Organisation(String name, Float budget, ArrayList<Entity> donorsList, Member... members) {
         super(name);
         this.budget = budget;
         this.donorsList = donorsList;
@@ -39,10 +38,11 @@ public class Organisation extends Entity {
             OrganisationDB.insertMemberData(DBURL, numMembers,m.getName(), m.getFamilyName(),
                     (java.sql.Date) m.getLastRegistrationDate(), "");
         }
-        this.financialRecord = createFile(name.replaceAll("\\s+","")  + "FinancialRecord");
+        this.financialRecord = createFile(name.replaceAll("\\s+","")  +
+                "FinancialRecord" + LocalDateTime.now().getYear());
     }
 
-    public Organisation(String name, Float budget, ArrayList<Donor> donorsList, ArrayList<Member> members) {
+    public Organisation(String name, Float budget, ArrayList<Entity> donorsList, ArrayList<Member> members) {
         super(name);
         this.budget = budget;
         this.donorsList = donorsList;
@@ -54,17 +54,19 @@ public class Organisation extends Entity {
         }
         // .replaceAll() removes white spaces from name
         // Better indexing on cross platform
-        this.financialRecord = createFile(name.replaceAll("\\s+","")  + "FinancialRecord");
+        this.financialRecord = createFile(name.replaceAll("\\s+","")  +
+                "FinancialRecord" + LocalDateTime.now().getYear());
     }
 
     public Organisation(String name, Float budget) {
         super(name);
         this.budget = budget;
         this.DBURL = OrganisationDB.connect(name);
-        this.financialRecord = createFile(name.replaceAll("\\s+","")  + "FinancialRecord");
+        this.financialRecord = createFile(name.replaceAll("\\s+","")  +
+                "FinancialRecord" + LocalDateTime.now().getYear());
     }
 
-    public Organisation(String name, ArrayList<Donor> donorsList, Member ...members) {
+    public Organisation(String name, ArrayList<Entity> donorsList, Member ...members) {
         super(name);
         this.donorsList = donorsList;
         this.DBURL = OrganisationDB.connect(name);
@@ -73,7 +75,8 @@ public class Organisation extends Entity {
             OrganisationDB.insertMemberData(DBURL, numMembers,m.getName(), m.getFamilyName(),
                     (java.sql.Date) m.getLastRegistrationDate(), "");
         }
-        this.financialRecord = createFile(name.replaceAll("\\s+","")  + "FinancialRecord");
+        this.financialRecord = createFile(name.replaceAll("\\s+","")  +
+                "FinancialRecord" + LocalDateTime.now().getYear());
     }
 
     public Organisation(String name, Float budget, Member ... members) {
@@ -85,7 +88,8 @@ public class Organisation extends Entity {
             OrganisationDB.insertMemberData(DBURL, numMembers,m.getName(), m.getFamilyName(),
                     (java.sql.Date) m.getLastRegistrationDate(), "");
         }
-        this.financialRecord = createFile(name.replaceAll("\\s+","")  + "FinancialRecord");
+        this.financialRecord = createFile(name.replaceAll("\\s+","")  +
+                "FinancialRecord" + LocalDateTime.now().getYear());
     }
 
     /**@TODO Ficher Exercice Budgétaire
@@ -116,11 +120,11 @@ public class Organisation extends Entity {
         this.budget = budget;
     }
 
-    public ArrayList<Donor> getDonorsList() {
+    public ArrayList<Entity> getDonorsList() {
         return donorsList;
     }
 
-    public void setDonorsList(ArrayList<Donor> donorsList) {
+    public void setDonorsList(ArrayList<Entity> donorsList) {
         this.donorsList = donorsList;
     }
 
@@ -350,7 +354,7 @@ public class Organisation extends Entity {
         org.recieveFunds(500);
         TimeUnit.SECONDS.sleep(2);
 
-        Report r1 = new Report(org, "fincialReport", LocalDate.now(), org.financialRecord);
+        Report r1 = new Report(org, "financialReport", LocalDate.now(), org.financialRecord);
         System.out.println(r1);
         //org.financialRecord.delete();
         //System.out.println(org.getMembersList());

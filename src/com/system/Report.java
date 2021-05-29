@@ -1,6 +1,6 @@
 package com.system;
 
-import com.entity.admin.Organisation;
+import com.entity.org.Organisation;
 import com.entity.person.Member;
 import com.veggie.Tree;
 
