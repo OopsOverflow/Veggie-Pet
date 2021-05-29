@@ -16,18 +16,35 @@ public class Person extends Entity {
         this.address = address;
     }
 
+    /**
+     * Permet d'obtenir le nom de famille d'une Personne
+     * @return le nom de famille d'une Personne
+     */
     public String getFamilyName() {
         return familyName;
     }
 
+    /**
+     * Permet d'obtenir la date de naissance d'une personne
+     * @return la date de naissance d'une personne
+     */
     public Date getDateOfBirth() {
         return dateOfBirth;
     }
 
+    /**
+     * Permet d'obtenir l'adresse d'une personne
+     * @return l'adresse d'une personne
+     */
     public String getAddress() {
         return address;
     }
 
+    /**
+     * Méthode modélisant le test d'égalité d'une personne avec une autre
+     * @param other l'autre personne
+     * @return un booléen modélisant l'égalité ou non d'une personne avec une autre
+     */
     @Override
     public boolean equals(Object other) {
 
