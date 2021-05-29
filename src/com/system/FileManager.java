@@ -11,6 +11,7 @@ public class FileManager {
 
     /**
      * Méthode modélisant la création d'un fichier
+     * @param fileName le nom du fichier
      * @return le fichier créé
      */
     public static File createFile(String fileName) {
@@ -30,6 +31,11 @@ public class FileManager {
 
     /**
      * Méthode modélisant l'écriture d'une opération
+     * @param amount le montant de l'opération
+     * @param budget le nouveau budget
+     * @param record le fichier
+     * @param origin l'entité qui écrit
+     * @param typeOfOperation le type d'opération
      * @return un booléen modélisant la réussite de l'opération
      */
     public static boolean writeToRecord(Entity origin, File record, String typeOfOperation, float amount, float budget){
