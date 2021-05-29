@@ -1,6 +1,7 @@
 package com.entity.org;
 
 import com.entity.Entity;
+import com.entity.admin.Municipality;
 import com.entity.person.Member;
 import com.system.NotificationManager;
 import com.system.OrganisationDB;
@@ -25,6 +26,7 @@ public class Organisation extends Entity {
     private static int numMembers = 0;
     private String DBURL;
     ArrayList<Entity> donorsList;
+    Municipality municipality;
 
     // Financial Record
     File financialRecord;
@@ -35,7 +37,11 @@ public class Organisation extends Entity {
     private Map<Integer, Integer> mapTreeVote = new HashMap<>();
     private Map<Integer, Integer> voteRanking = new HashMap<>();
 
-    public Organisation(String name, Float budget, ArrayList<Entity> donorsList, Member... members) {
+    // Visit
+    private Map<Integer, Boolean> mapVisit = new HashMap<>();
+    private ArrayList<Queue<Tree>> listRemarkableTreeNotVisitedForAWhile = new ArrayList<>();
+
+    public Organisation(String name, Float budget, ArrayList<Entity> donorsList, Municipality muni, Member... members) {
         super(name);
         this.budget = budget;
         this.donorsList = donorsList;
@@ -48,9 +54,10 @@ public class Organisation extends Entity {
         }
         this.financialRecord = createFile(name.replaceAll("\\s+","")  +
                 "FinancialRecord" + LocalDateTime.now().getYear());
+        this.municipality = muni;
     }
 
-    public Organisation(String name, Float budget, ArrayList<Entity> donorsList, ArrayList<Member> members) {
+    public Organisation(String name, Float budget, ArrayList<Entity> donorsList, ArrayList<Member> members, Municipality muni) {
         super(name);
         this.budget = budget;
         this.donorsList = donorsList;
@@ -67,13 +74,15 @@ public class Organisation extends Entity {
                 "FinancialRecord" + LocalDateTime.now().getYear());
     }
 
-    public Organisation(String name, Float budget) {
+    public Organisation(String name, Float budget, Municipality muni) {
         super(name);
         this.budget = budget;
         this.DBURL = OrganisationDB.connect(name);
         OrganisationDB.createMembersTable(DBURL);
         this.financialRecord = createFile(name.replaceAll("\\s+","")  +
                 "FinancialRecord" + LocalDateTime.now().getYear());
+
+        this.municipality = muni;
     }
 
     public Organisation(String name, ArrayList<Entity> donorsList, Member ...members) {
@@ -90,7 +99,7 @@ public class Organisation extends Entity {
                 "FinancialRecord" + LocalDateTime.now().getYear());
     }
 
-    public Organisation(String name, Float budget, Member ... members) {
+    public Organisation(String name, Float budget, Municipality muni, Member ... members) {
         super(name);
         this.budget = budget;
         this.DBURL = OrganisationDB.connect(name);
@@ -102,6 +111,8 @@ public class Organisation extends Entity {
         }
         this.financialRecord = createFile(name.replaceAll("\\s+","")  +
                 "FinancialRecord" + LocalDateTime.now().getYear());
+
+        this.municipality = muni;
     }
 
 
@@ -372,6 +383,32 @@ public class Organisation extends Entity {
 ////        aucun autre membre n'a deja programme une visite pour cet arbre remarquable. Pour
 //    }
 //
+    void sortByDateTree(){
+
+    }
+
+    void setupListRemarkableTreeNotVisitedForAWhile(){
+
+    }
+
+    void setupListRemarkableTreeVisit(){
+        for(int i = 0 ; i < municipality.getTrees().size() ; i++){
+            if(!(municipality.getTrees().get(i).isRemarkable())){
+                mapVisit.put(municipality.getTrees().get(i).getTreeID(), false);
+            }
+        }
+    }
+
+    void allowOrNotVisit(Member m, Tree t){
+        m.toVolunteerOn(t);
+        if(mapVisit.get(t.getTreeID()) ==  false){
+            System.out.println("[ORGANISATION] Visit Accepted for the tree \'" + t.getTreeID() + "\'");
+        }
+        else{
+            System.err.println("[ORGANISATION] Visit Rejected for the tree \'" + t.getTreeID() + "\'. " +
+                    "Tree already been reserved");
+        }
+    }
 
     public void refundMember(Member member, float amount){
 //        membre ayant eectue la visite est defraye pour celle-ci d'un montant xe,
@@ -482,20 +519,24 @@ public class Organisation extends Entity {
                 "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
                 new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
 
-        Organisation org = new Organisation("Tree Lovers", 1000.0f, m1);
+        Municipality muni = new Municipality("Antony", "Somewhere", "files\\testData.csv");
 
 
+        Organisation org = new Organisation("Tree Lovers", 1000.0f, muni, m1);
+
+        //System.out.println(org.municipality.getTrees());
+        org.setupListRemarkableTreeVisit();
+        System.out.println(org.mapVisit);
         // org.addMember(m2);
         // System.out.println(org.toString());
         /*org.getVotesFromMember();
         System.out.println(org.getListVoteMember());*/
-        org.addMember(m2);
+        /*org.addMember(m2);
         org.addMember(m3);
         org.addMember(m4);
         org.addMember(m5);
         org.addMember(m6);
-        org.removeMember(m1);
-        org.removeMember(m6);
+
         m2.vote(t1,t2,t3);
         m1.vote(t1,t3,t5);
         m3.vote(t1,t4,t5);
@@ -511,6 +552,8 @@ public class Organisation extends Entity {
         org.updateVoteRanking();
 
         System.out.println("Affichage de la map \'voteRanking\' : " + org.voteRanking);
+
+        System.out.println("Affichage de la map avec que des arbres remarquables : " + org.mapVisit);
 
 
         //org.addMoneyFromMemberContribution(m1, 200);
@@ -529,7 +572,7 @@ public class Organisation extends Entity {
         //Report r1 = new Report(org, "financialReport", LocalDate.now(), org.financialRecord);
         //System.out.println(r1);
         //org.financialRecord.delete();
-        //System.out.println(org.getMembersList());
+        //System.out.println(org.getMembersList());*/
 
     }
 }
