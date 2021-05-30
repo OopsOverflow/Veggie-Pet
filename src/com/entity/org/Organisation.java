@@ -567,16 +567,9 @@ public class Organisation extends Entity {
      * @return
      */
     public boolean allowOrNotVisit(Member m, Tree t){
-        for(int i = 0 ; i < mapVisit.size() ; i++){
-            if(!(mapVisit.containsKey(t.getTreeID()))){
-                System.err.println("[ORGANISATION] Visit rejected : The tree you want to visit is not in \'" +
-                        municipality.getName() + "\'");
-                return false;
-            }
-        }
         if(t.isRemarkable()){
             if(mapVisit.get(t.getTreeID()) ==  false){
-                System.out.println("[ORGANISATION] Visit Accepted for the tree \'" + t.getTreeID() + "\'");
+                System.out.println("\n\t[ORGANISATION] Visit Accepted for the tree \'" + t.getTreeID() + "\'");
                 mapVisit.put(t.getTreeID(), true);
                 for(int i = 0 ; i < municipality.getTrees().size() ; i++){
                     if(municipality.getTrees().get(i).getTreeID() == t.getTreeID()) {
@@ -588,15 +581,15 @@ public class Organisation extends Entity {
                 //@TODO : Ajouter les notifications
             }
             else{
-                System.err.println("[ORGANISATION] Visit Rejected for the tree \'" + t.getTreeID() + "\'. " +
-                        "Tree already been reserved");
+                System.err.println(String.format("[ORGANISATION] Visit from [%s] rejected for the tree \'" + t.getTreeID() + "\'. " +
+                        "Tree already been reserved", m.getName()));
                 //System.out.println("Here's a list of remarkable tree not visited for a while : " + listRemarkableTreeNotVisitedForAWhile);
                 return false;
                 //@TODO : Ajouter les notifications
             }
         }
         else{
-            System.err.println("[ORGANISATION] Tree not remarkable");
+            System.err.println(String.format("[ORGANISATION] Visit from [%s] not possible : Tree not remarkable", m.getName()));
             return false;
         }
 
