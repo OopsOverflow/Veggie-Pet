@@ -132,24 +132,41 @@ public class Main {
 
 
         // Visits
-        System.out.println("Manipulating Visit function");
+        System.out.println("\n\n\t\t<===== Manipulating Visit function =====>");
         TimeUnit.SECONDS.sleep(2);
-        System.out.println("---- VISIT 🌲 ----");
+        System.out.println("\n\n\t\t---- VISIT 🌲 ----");
         TimeUnit.SECONDS.sleep(2);
         TreeLovers.doAllVisitFx();
-        System.out.println("Affichage de la mapVisit " + TreeLovers.getMapVisit());
-        //System.out.println("Affichage de la file d'attente TreeBlaBla : " +
-        //TreeLovers.getListRemarkableTreeNotVisitedForAWhile());
 
-        //tree2 est remarquable
-        //tree3 ne l'est pas
+        // TEST DES FONCTIONALITÉS
 
-        /*if(m1.toVolunteerOn(TreeLovers, TreeLovers.getMunicipality().getTrees().get(5))){
-            System.out.println(String.format("[%s] Your visit has been accepted. FOR THE TREES!", m1.getName()));
+        //Tree2 est un arbre remarquable | Tree3 ne l'est pas
+        // Le membre 1 se porte volontaire pour faire une visite de l'arbre 2
+        // Cette visite va être un succès car l'arbre est remarque et aucun autre membre n'a reservé de visite.
+        if(m1.toVolunteerOn(TreeLovers, tree2)){
+            System.out.println(String.format("\n\t[%s] Your visit has been accepted. FOR THE TREES!", m1.getName()));
         }
         else{
-            System.out.println(String.format("[%s] Your visit has not been accepted. Sorry", m1.getName()));
-        }*/
+            System.out.println(String.format("\n\t[%s] Your visit has not been accepted. Sorry", m1.getName()));
+        }
+
+        // Le membre 1 se porte volontaire pour faire une visite de l'arbre 3
+        // Cette visite va être refusé car l'arbre n'est pas remarquable
+        if(m1.toVolunteerOn(TreeLovers, tree3)){
+            System.out.println(String.format("\n\t[%s] Your visit has been accepted. FOR THE TREES!", m1.getName()));
+        }
+        else{
+            System.out.println(String.format("\n\t[%s] Your visit has not been accepted. Sorry", m1.getName()));
+        }
+
+        // Le membre 2 se porte volontaire pour faire une visite de l'arbre 2
+        // Cette visite va être refusé car une visite a dejà été programmé pour l'arbre 2
+        if(m2.toVolunteerOn(TreeLovers, tree2)){
+            System.out.println(String.format("\n\t[%s] Your visit has been accepted. FOR THE TREES!", m2.getName()));
+        }
+        else{
+            System.out.println(String.format("\n\t[%s] Your visit has not been accepted. Sorry", m2.getName()));
+        }
 
 
         System.out.println();
