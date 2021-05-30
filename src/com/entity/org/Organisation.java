@@ -245,6 +245,14 @@ public class Organisation extends Entity {
         return listRemarkableTreeNotVisitedForAWhile;
     }
 
+    /**
+     * Permet d'obtenir la municipalité de l'organisation
+     * @return la municipalité de l'organisation
+     */
+    public Municipality getMunicipality() {
+        return municipality;
+    }
+
     // Organisation Operations
 
     /**
@@ -287,6 +295,11 @@ public class Organisation extends Entity {
         }
     }
 
+    /**
+     * Méthode modélisant l'ajout d'activité a la base de données
+     * @param member le member qui fait l'action
+     * @param report le rapport qui contient les infos de l'action
+     */
     public void addActivity(Member member, Report report){
         ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(member);
         if (aux.getLeft())
@@ -347,10 +360,13 @@ public class Organisation extends Entity {
     }
 
 
+    /**
+     * Méthode modélisant l'ajout d'un donateur a la liste des donateurs
+     * @param donor le donneur ajouté
+     */
     public void addDonor(Entity donor){
         this.donorsList.add(donor);
     }
-
 
     /**
      * Méthode modélisant la recherche d'un membre dans la liste des membres.
@@ -389,7 +405,6 @@ public class Organisation extends Entity {
 
         return false;
     }
-
 
     // VOTE's FUNCTION
 
@@ -467,7 +482,6 @@ public class Organisation extends Entity {
         return false;
     }
 
-
     /**
      * Méthode modélisant une demande de donation
      */
@@ -510,12 +524,17 @@ public class Organisation extends Entity {
      * Cette variable est une file qui contient les arbres les moins visités. La tête de liste est l'arbre le moins
      * visité et ainsi de suite.
      */
-    private void setupListRemarkableTreeNotVisitedForAWhile(){
+    private void updateListRemarkableTreeNotVisitedForAWhile(){
         ArrayList<Tree> sortedTreeByDate = getSortedTreeByDate();
         // private ArrayList<Queue<Tree>> listRemarkableTreeNotVisitedForAWhile = new ArrayList<>();
         for(int i = 0 ; i < sortedTreeByDate.size() ; i++){
-            if(!(sortedTreeByDate.get(i).isRemarkable())){
-                listRemarkableTreeNotVisitedForAWhile.addLast(sortedTreeByDate.get(i));
+            if(sortedTreeByDate.get(i).getTreeID() == null){
+                continue;
+            }
+            else{
+                if(sortedTreeByDate.get(i).isRemarkable()){
+                    listRemarkableTreeNotVisitedForAWhile.addLast(sortedTreeByDate.get(i));
+                }
             }
         }
     }
@@ -526,7 +545,7 @@ public class Organisation extends Entity {
      */
     private void setupListRemarkableTreeVisit(){
         for(int i = 0 ; i < municipality.getTrees().size() ; i++){
-            if(!(municipality.getTrees().get(i).isRemarkable())){
+            if(municipality.getTrees().get(i).isRemarkable()){
                 if(municipality.getTrees().get(i).getTreeID() == null){
                     continue;
                 }
@@ -544,27 +563,41 @@ public class Organisation extends Entity {
      * Sinon il est indiqué au membre que la visite est impossible et il lui est indiqué quelques arbres qui n'ont pas
      * fait l'objet de visite depuis longtemps
      * @param m le membre qui fait la demande de visite
+     * @param t l'arbre associé a la demande de visite
      * @return
      */
-    public void allowOrNotVisit(Member m, Tree t){
-        System.out.println("La fonction s'éxecute");
+    public boolean allowOrNotVisit(Member m, Tree t){
+        for(int i = 0 ; i < mapVisit.size() ; i++){
+            if(!(mapVisit.containsKey(t.getTreeID()))){
+                System.err.println("[ORGANISATION] Visit rejected : The tree you want to visit is not in \'" +
+                        municipality.getName() + "\'");
+                return false;
+            }
+        }
         if(t.isRemarkable()){
-            System.out.println("t is remarkable");
             if(mapVisit.get(t.getTreeID()) ==  false){
                 System.out.println("[ORGANISATION] Visit Accepted for the tree \'" + t.getTreeID() + "\'");
                 mapVisit.put(t.getTreeID(), true);
+                for(int i = 0 ; i < municipality.getTrees().size() ; i++){
+                    if(municipality.getTrees().get(i).getTreeID() == t.getTreeID()) {
+                        municipality.getTrees().get(i).setLastVisit(LocalDate.now());
+                        break;
+                    }
+                }
+                return true;
                 //@TODO : Ajouter les notifications
             }
             else{
                 System.err.println("[ORGANISATION] Visit Rejected for the tree \'" + t.getTreeID() + "\'. " +
                         "Tree already been reserved");
-                System.out.println("Here's a list of remarkable tree not visited for a while : " + listRemarkableTreeNotVisitedForAWhile);
+                //System.out.println("Here's a list of remarkable tree not visited for a while : " + listRemarkableTreeNotVisitedForAWhile);
+                return false;
                 //@TODO : Ajouter les notifications
             }
         }
         else{
-            System.out.println("t n'est pas remarkable");
             System.err.println("[ORGANISATION] Tree not remarkable");
+            return false;
         }
 
     }
@@ -573,10 +606,8 @@ public class Organisation extends Entity {
      * Méthode qui regroupe juste les fonctions de setup pour les visites. Utile pour effectuer des tests.
      */
     public void doAllVisitFx(){
-        setupListRemarkableTreeNotVisitedForAWhile();
+        updateListRemarkableTreeNotVisitedForAWhile();
         setupListRemarkableTreeVisit();
-        System.out.println("ListRemarkableTreeNotVisitedForAWhile : " + listRemarkableTreeNotVisitedForAWhile);
-        System.out.println("ListRemarkableTreeVisit : " + mapVisit);
     }
 
     /**
@@ -679,13 +710,9 @@ public class Organisation extends Entity {
                 new Date(2000, 05, 01), "Antony",
                 new Date(2021, 05, 25), false, 15000);
 
-        Tree t1 = new Tree(147179, "Marronnier", 150, 15, "hippocastanum",
+        Tree t2 = new Tree(147179, "Marronnier", 150, 15, "hippocastanum",
                 "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
-                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
-
-        Tree t2 = new Tree(1, "Marronnier", 150, 15, "hippocastanum",
-                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
-                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
+                new Float[]{(float)48.8632712288,(float)2.39435673087}, true);
 
         Tree t3 = new Tree(2, "Marronnier", 150, 15, "hippocastanum",
                 "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
@@ -712,12 +739,16 @@ public class Organisation extends Entity {
 
         Organisation org = new Organisation("Tree Lovers", 1000.0f, muni, m1);
 
-        //System.out.println(org.municipality.getTrees());
+
+        /*private Map<Integer, Boolean> mapVisit = new HashMap<>();
+        private Deque<Tree> listRemarkableTreeNotVisitedForAWhile = new LinkedList<>(); */
 
         org.doAllVisitFx();
 
+        System.out.println("\nMapVisit : " + org.mapVisit);
+        System.out.println("\nlistRemarkableTreeNotVisitedForAWhile : " + org.listRemarkableTreeNotVisitedForAWhile);
 
-        m1.toVolunteerOn(org, t1);
+        System.out.println(m1.toVolunteerOn(org, t2));
 
 
         //org.payBill(10);

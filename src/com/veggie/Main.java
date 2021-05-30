@@ -128,6 +128,24 @@ public class Main {
 
 
         // Visits
+        System.out.println("Manipulating Visit function");
+        TimeUnit.SECONDS.sleep(2);
+        System.out.println("---- VISIT 🌲 ----");
+        TimeUnit.SECONDS.sleep(2);
+        TreeLovers.doAllVisitFx();
+        System.out.println("Affichage de la mapVisit " + TreeLovers.getMapVisit());
+        //System.out.println("Affichage de la file d'attente TreeBlaBla : " +
+        //TreeLovers.getListRemarkableTreeNotVisitedForAWhile());
+
+        //tree2 est remarquable
+        //tree3 ne l'est pas
+
+        /*if(m1.toVolunteerOn(TreeLovers, TreeLovers.getMunicipality().getTrees().get(5))){
+            System.out.println(String.format("[%s] Your visit has been accepted. FOR THE TREES!", m1.getName()));
+        }
+        else{
+            System.out.println(String.format("[%s] Your visit has not been accepted. Sorry", m1.getName()));
+        }*/
 
 
 

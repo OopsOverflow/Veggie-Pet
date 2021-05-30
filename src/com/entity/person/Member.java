@@ -171,7 +171,6 @@ public class Member extends Person {
                     System.out.println("\n\tVote Replace : yes or no ?");
                     answer = sc.next();
                     answer = answer.toLowerCase();
-                    System.out.println("answer=" + answer);
                 } while (!(answer.equals("yes") || answer.equals("no")));
                 if (answer.equals("yes")){
                     votes.poll();
@@ -202,10 +201,10 @@ public class Member extends Person {
      * Apelle la méthode allowOrNotVisit() de la classe Organisation
      * @param o l'organisation que le membre veut representer lors de la visite
      * @param t l'arbre que le membre visité
-     * @return
+     * @return un booléen modélisant la reussite
      */
-    public void toVolunteerOn(Organisation o, Tree t){
-        o.allowOrNotVisit(this, t);
+    public boolean toVolunteerOn(Organisation o, Tree t){
+        return o.allowOrNotVisit(this, t);
     }
 
     /**

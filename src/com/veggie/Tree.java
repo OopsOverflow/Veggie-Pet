@@ -22,7 +22,7 @@ public class Tree {
     private Float[] GPS;
     private boolean remarkable;
     private ArrayList<Report> listReport;
-    private Date lastVisit;
+    private LocalDate lastVisit;
 
 
     // Constructor
@@ -52,7 +52,7 @@ public class Tree {
         this.address = address;
         this.GPS = GPS;
         this.remarkable = remarkable;
-        this.lastVisit = new Date(1900,01,01);
+        this.lastVisit = LocalDate.MIN;
     }
 
     // Getters & Setters
@@ -140,7 +140,7 @@ public class Tree {
      * Permet d'obtenir la date de la dernière visite d'un membre d'association sur l'arbre
      * @return la date de la dernière visite
      */
-    public Date getLastVisit() {
+    public LocalDate getLastVisit() {
         return lastVisit;
     }
 
@@ -161,6 +161,10 @@ public class Tree {
             System.err.println(String.format("[Tree %d] ERROR : TREE IS ALREADY REMARKABLE", treeID));
         else
             this.remarkable = remarkable;
+    }
+
+    public void setLastVisit(LocalDate lastVisit) {
+        this.lastVisit = lastVisit;
     }
 
     /**
