@@ -188,12 +188,12 @@ public class Member extends Person {
      * @param tree Visited Tree
      * @param date date of visit
      */
-    public void submitReport(Tree tree, Date date){
+    public void submitReport(Tree tree, Date date, Organisation organisation){
         Report report = new Report(tree, this, "Activity : Visit Report", LocalDate.now(),
                 "Visited Tree " + tree.getTreeID() +
                 "\n on " + date.toString() +
                 "\nLocation " + tree.getAddress());
-
+        organisation.appendToActivity(this, report);
     }
 
     /**
@@ -213,9 +213,7 @@ public class Member extends Person {
      * @return un String avec les données
      */
     public String getMyData(Organisation organisation){
-        String myData = organisation.sendData(this, decryptKey);
-        System.out.println(myData);
-        return myData;
+        return organisation.sendData(this, decryptKey);
     }
 
     /**

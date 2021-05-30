@@ -1,13 +1,18 @@
-package com.veggie;
+package com.veggie.app;
 
 import com.entity.admin.GreenSpaces;
 import com.entity.admin.Municipality;
 import com.entity.org.Organisation;
 import com.entity.person.Member;
 import com.entity.person.Person;
+import com.system.Report;
+import com.veggie.ParserCSV;
+import com.veggie.Tree;
 
 import java.io.File;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
@@ -185,17 +190,18 @@ public class Main {
         //Tree2 est un arbre remarquable | Tree3 ne l'est pas
         // Le membre 1 se porte volontaire pour faire une visite de l'arbre 2
         // Cette visite va être un succès car l'arbre est remarque et aucun autre membre n'a reservé de visite.
-        if(m1.toVolunteerOn(TreeLovers, tree2)){
-            System.out.println(String.format("\n\t[%s] Your visit has been accepted. FOR THE TREES!", m1.getName()));
+        if(m2.toVolunteerOn(TreeLovers, tree2)){
+            System.out.println(String.format("\n\t[%s] Your visit has been accepted. FOR THE TREES!", m2.getName()));
+            m2.submitReport(tree2, new Date(2021, 5, 30), TreeLovers);
         }
         else{
-            System.out.println(String.format("\n\t[%s] Your visit has not been accepted. Sorry", m1.getName()));
+            System.out.println(String.format("\n\t[%s] Your visit has not been accepted. Sorry", m2.getName()));
         }
 
         // Le membre 1 se porte volontaire pour faire une visite de l'arbre 3
         // Cette visite va être refusé car l'arbre n'est pas remarquable
-        if(m1.toVolunteerOn(TreeLovers, tree3)){
-            System.out.println(String.format("\n\t[%s] Your visit has been accepted. FOR THE TREES!", m1.getName()));
+        if(m2.toVolunteerOn(TreeLovers, tree3)){
+            System.out.println(String.format("\n\t[%s] Your visit has been accepted. FOR THE TREES!", m2.getName()));
         }
         else{
             System.out.println(String.format("\n\t[%s] Your visit has not been accepted. Sorry", m1.getName()));
@@ -203,13 +209,30 @@ public class Main {
 
         // Le membre 2 se porte volontaire pour faire une visite de l'arbre 2
         // Cette visite va être refusé car une visite a dejà été programmé pour l'arbre 2
-        if(m2.toVolunteerOn(TreeLovers, tree2)){
-            System.out.println(String.format("\n\t[%s] Your visit has been accepted. FOR THE TREES!", m2.getName()));
+        if(m1.toVolunteerOn(TreeLovers, tree2)){
+            System.out.println(String.format("\n\t[%s] Your visit has been accepted. FOR THE TREES!", m1.getName()));
         }
         else{
-            System.out.println(String.format("\n\t[%s] Your visit has not been accepted. Sorry", m2.getName()));
+            System.out.println(String.format("\n\t[%s] Your visit has not been accepted. Sorry", m1.getName()));
         }
 
+        System.out.println();
+        System.out.println(m2.getName() + " Wants to see the Data the organisation keeps on him");
+        TimeUnit.SECONDS.sleep(1);
+        System.out.println(m2.getMyData(TreeLovers));
+        System.out.println("Data is Encrypted only the user can see it using his unique 256 bit key.");
+
+        System.out.println();
+        TimeUnit.SECONDS.sleep(2);
+        // Leaving the Organisation
+        System.out.println(m1.getName() + " Wants to leave the Organisation");
+        TimeUnit.SECONDS.sleep(1);
+        System.out.println("All his personal data will be deleted, but they keep track of his past activities.");
+        System.out.println();
+        TimeUnit.SECONDS.sleep(1);
+        m1.leaveOrganisation(TreeLovers);
+
+        System.out.println();
 
         System.out.println();
         System.out.println("----- Tiding Things up ... ------");

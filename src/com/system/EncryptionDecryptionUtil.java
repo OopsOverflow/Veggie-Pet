@@ -82,15 +82,4 @@ public class EncryptionDecryptionUtil {
         return Base64.getEncoder().encodeToString(secretKey.getEncoded());
 
     }
-
-
-    public static void main(String[] args) throws NoSuchAlgorithmException {
-
-        String key = generateKey();
-        String data = "2\t Pablo\t Elenore\t3901-11-29\t3921-06-23\n";
-
-        String encrypted = encrypt(key, data);
-        System.out.println(encrypted);
-        System.out.println(decrypt(key, encrypted));
-    }
 }

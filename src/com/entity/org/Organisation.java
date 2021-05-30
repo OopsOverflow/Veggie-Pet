@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 public class Organisation extends Entity {
     private Float budget;
-    private static int numMembers = 0;
+    private static int numMembers = 1;
     private String DBURL;
     ArrayList<Entity> donorsList = new ArrayList<>();
     Municipality municipality;
@@ -303,7 +303,7 @@ public class Organisation extends Entity {
     public void addActivity(Member member, Report report){
         ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(member);
         if (aux.getLeft())
-            OrganisationDB.addMemberActivity(DBURL, aux.getRight(), report.toString());
+            OrganisationDB.addMemberActivity(DBURL, aux.getRight() + 1, report.toString());
         else
             System.out.println("ERROR : NOT A MEMBER OF THE ORGANISATION, REPORT NOT SUBMITTED");
     }
@@ -578,18 +578,16 @@ public class Organisation extends Entity {
                     }
                 }
                 return true;
-                //@TODO : Ajouter les notifications
             }
             else{
-                System.err.println(String.format("[ORGANISATION] Visit from [%s] rejected for the tree \'" + t.getTreeID() + "\'. " +
+                System.out.println(String.format("[ORGANISATION] Visit from [%s] rejected for the tree \'" + t.getTreeID() + "\'. " +
                         "Tree already been reserved", m.getName()));
                 //System.out.println("Here's a list of remarkable tree not visited for a while : " + listRemarkableTreeNotVisitedForAWhile);
                 return false;
-                //@TODO : Ajouter les notifications
             }
         }
         else{
-            System.err.println(String.format("[ORGANISATION] Visit from [%s] not possible : Tree not remarkable", m.getName()));
+            System.out.println(String.format("[ORGANISATION] Visit from [%s] not possible : Tree not remarkable", m.getName()));
             return false;
         }
 
@@ -663,6 +661,22 @@ public class Organisation extends Entity {
     }
 
     /**
+     * Appends Memeber visit activity to the datbase
+     * @param member the concerned member
+     * @param report data collected from the visit
+     */
+    public void appendToActivity(Member member, Report report){
+        // Get memeber ID
+        ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(member);
+        if (aux.getLeft()){
+            OrganisationDB.addMemberActivity(DBURL, aux.getRight(), report.toString());
+            System.out.println("Successfully Noted Activity");
+            return;
+        }
+        System.out.println("ERROR : Not a Member of the Organisation");
+    }
+
+    /**
      * Méthode modélisant le fait que l'organisation reçoit des fonds
      * @param amount le montant des fonds reçus
      */
@@ -681,117 +695,4 @@ public class Organisation extends Entity {
         return OrganisationSTB.toString();
     }
 
-    public static void main(String[] args) throws InterruptedException {
-
-        Member m1 = new Member("Houssem", "Mahmoud", new Date(1998, 04, 30), "Somewhere not far from Tunis",
-                new Date(2021, 05, 23), false, 5000);
-
-        Member m2 = new Member("Esteban", "Neraudau", new Date(2001, 10, 29), "Antony",
-                new Date(2021, 05, 23), false, 5000);
-
-        Member m3 = new Member("Mohamed", "Mahmoud", new Date(2002, 10, 28), "Somewhere not far from Tunis",
-                new Date(2021, 05, 24), false, 10000);
-
-        Member m4 = new Member("Rayane", "Hammadou",
-                new Date(2000, 05, 01), "Antony",
-                new Date(2021, 05, 25), false, 15000);
-
-        Member m5 = new Member("Rayane", "Hammadou",
-                new Date(2000, 05, 01), "Antony",
-                new Date(2021, 05, 25), false, 15000);
-
-        Member m6 = new Member("Rayane", "Hammadou",
-                new Date(2000, 05, 01), "Antony",
-                new Date(2021, 05, 25), false, 15000);
-
-        Tree t2 = new Tree(147179, "Marronnier", 150, 15, "hippocastanum",
-                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
-                new Float[]{(float)48.8632712288,(float)2.39435673087}, true);
-
-        Tree t3 = new Tree(2, "Marronnier", 150, 15, "hippocastanum",
-                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
-                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
-
-        Tree t4 = new Tree(3, "Marronnier", 150, 15, "hippocastanum",
-                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
-                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
-
-        Tree t5 = new Tree(4, "Marronnier", 150, 15, "hippocastanum",
-                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
-                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
-
-        Tree t6 = new Tree(5, "Marronnier", 150, 15, "hippocastanum",
-                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
-                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
-
-        Tree t7 = new Tree(6, "Marronnier", 150, 15, "hippocastanum",
-                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
-                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
-
-        Municipality muni = new Municipality("Antony", "Somewhere", "files\\testData.csv");
-
-
-        Organisation org = new Organisation("Tree Lovers", 1000.0f, muni, m1);
-
-
-        /*private Map<Integer, Boolean> mapVisit = new HashMap<>();
-        private Deque<Tree> listRemarkableTreeNotVisitedForAWhile = new LinkedList<>(); */
-
-        org.doAllVisitFx();
-
-        System.out.println("\nMapVisit : " + org.mapVisit);
-        System.out.println("\nlistRemarkableTreeNotVisitedForAWhile : " + org.listRemarkableTreeNotVisitedForAWhile);
-
-        System.out.println(m1.toVolunteerOn(org, t2));
-
-
-        //org.payBill(10);
-        // org.addMember(m2);
-        // System.out.println(org.toString());
-        /*org.getVotesFromMember();
-        System.out.println(org.getListVoteMember());*/
-        /*org.addMember(m2);
-        org.addMember(m3);
-        org.addMember(m4);
-        org.addMember(m5);
-        org.addMember(m6);
-
-        m2.vote(t1,t2,t3);
-        m1.vote(t1,t3,t5);
-        m3.vote(t1,t4,t5);
-        m4.vote(t1,t6,t7);
-        m5.vote(t1,t5,t6,t3);
-        m6.vote(t1,t2,t3,t4,t5);
-
-        org.getVotesFromMember();
-        System.out.println(org.getListVoteMember());
-        org.countVote();
-        System.out.println(org.getMapTreeVote());
-
-        org.updateVoteRanking();
-
-        System.out.println("Affichage de la map \'voteRanking\' : " + org.voteRanking);
-
-        System.out.println("Affichage de la map avec que des arbres remarquables : " + org.mapVisit);
-
-
-        //org.addMoneyFromMemberContribution(m1, 200);
-        // Added time delays for dramatic effect
-        //TimeUnit.SECONDS.sleep(2);
-        //org.addMember(m3);
-        //System.out.println(org.toString());
-        //System.out.println(org.checkMemberInMemberList(m3).getLeft());
-
-        //org.refundMember(m2,75);
-        //TimeUnit.SECONDS.sleep(2);
-        //org.payBill(50);
-        //org.recieveFunds(500);
-        //TimeUnit.SECONDS.sleep(2);
-
-        //Report r1 = new Report(org, "financialReport", LocalDate.now(), org.financialRecord);
-        //System.out.println(r1);
-        //org.financialRecord.delete();
-        //System.out.println(org.getMembersList());*/
-
-    }
 }

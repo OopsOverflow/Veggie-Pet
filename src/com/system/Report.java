@@ -112,21 +112,4 @@ public class Report {
 
         return reportSTB.toString();
     }
-
-    public static void main(String[] args){
-        Tree t = new Tree(147179, "Marronnier", 150, 15, "hippocastanum",
-                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
-                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
-
-        Member m1 = new Member("Houssem", "Mahmoud", new Date(1998,04,30), "Somewhere not far from Tunis",
-                new Date(2021,05,23), false, 5000);
-
-
-        //Municipality muni = new Municipality()
-
-        //Organisation org = new Organisation("Tree Lovers", 100.0f, m1, );
-
-        //Report r = new Report(t,m1, "Some", LocalDate.now(), "Ceci est le contenu du report");
-        //System.out.println(r);
-    }
 }

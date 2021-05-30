@@ -180,30 +180,4 @@ public class Tree {
     };
 
 
-    @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
-    @Override
-    public String toString(){
-        StringBuilder treeSTB = new StringBuilder(String.format("[Tree %d INFO]\n", this.treeID));
-        treeSTB.append("\tGenre : \t" + genre + "\n");
-        treeSTB.append("\tSpecie :\t" + specie + "\n");
-        treeSTB.append("\tCommon Name :\t" + commonName + "\n");
-        treeSTB.append("\tHeight (Meters) : \t" + height + "\n");
-        treeSTB.append("\tCircumference (Centimeters) : \t" + circumference + "\n");
-        treeSTB.append("\tDevelopment Stage : \t" + developmentStage + "\n");
-        treeSTB.append("\tAddress : \t" + address + "\n");
-        treeSTB.append("\tGPS Coordinates : \t" + GPS[0] + "," + GPS[1] + "\n");
-        treeSTB.append("\tRemarkable : \t" + remarkable + "\n");
-        treeSTB.append("\tLast Visit : \t" + lastVisit + "\n");
-
-
-        return treeSTB.toString();
-    }
-
-    public static void main(String[] args){
-        Tree t = new Tree(147179, "Marronnier", 150, 15, "hippocastanum",
-                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
-                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
-        System.out.println(t.toString());
-    }
-
 }

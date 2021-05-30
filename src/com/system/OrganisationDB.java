@@ -1,5 +1,7 @@
 package com.system;
 
+import com.entity.person.Member;
+
 import java.io.File;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
@@ -82,7 +84,7 @@ public class OrganisationDB {
 
         try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
+            pstmt.setInt(1, id - 1);
             pstmt.setString(2, name);
             pstmt.setString(3, lastname);
             pstmt.setDate(4, dateofbirth);
@@ -116,7 +118,7 @@ public class OrganisationDB {
             pstmt.setString(1, "left");
             pstmt.setString(2, "left");
             pstmt.setDate(3, null);
-            pstmt.setInt(4, memberID);
+            pstmt.setInt(4, memberID + 1);
             // update
             pstmt.executeUpdate();
             System.out.println("Values were successfully erased from the DataBase.");
@@ -133,10 +135,10 @@ public class OrganisationDB {
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             // Get the old data and append to it
-            String newActivity = OrganisationDB.fetchMemberActivity(url, memberID) + activity;
+            String newActivity = OrganisationDB.fetchMemberActivity(url, memberID + 1) + activity;
 
             pstmt.setString(1, newActivity);
-            pstmt.setInt(2, memberID);
+            pstmt.setInt(2, memberID + 1);
             // update
             pstmt.executeUpdate();
             System.out.println("Activity was successfully uploaded.");
@@ -191,7 +193,7 @@ public class OrganisationDB {
              PreparedStatement pstmt  = conn.prepareStatement(sql)){
             ++MemberID;
             // set the value
-            pstmt.setInt(1, MemberID );
+            pstmt.setInt(1, MemberID + 1 );
             //
             ResultSet rs  = pstmt.executeQuery();
 
@@ -221,7 +223,7 @@ public class OrganisationDB {
              PreparedStatement pstmt  = conn.prepareStatement(sql)){
 
             // set the value
-            pstmt.setInt(1, MemberID);
+            pstmt.setInt(1, MemberID + 1);
             //
             ResultSet rs  = pstmt.executeQuery();
 
@@ -236,30 +238,5 @@ public class OrganisationDB {
             return null;
         }
     }
-    
-    //@TODO : Select member data and activity, convert it to a string and encrypt it.
-    // TODO: 28/05/2021 add AES encryption 
 
-
-  
-    public static void main(String[] args) throws NoSuchAlgorithmException {
-        String url = connect("Tree Lovers");
-        System.out.println(url);
-        createMembersTable(url);
-        //insertMemberData(url,100, "Esteban", "Neradeau", new Date(2021,9,15), "Streaming");
-        //deleteMemberData(url, 100);
-        String key =  EncryptionDecryptionUtil.generateKey();
-        String aa = fetchMemberData(url, 2, key);
-        System.out.println(aa);
-        System.out.println(EncryptionDecryptionUtil.decrypt(key , aa));
-
-
-        //System.out.println(fetchMembersData(url));
-
-        // Delete the DataBase after each use; At least for now.
-//        File data = new File("src\\com\\entity\\org\\TreeLovers.db");
-//        data.delete();
-
-
-    }
 }
