@@ -1,6 +1,7 @@
 package com.system;
 
 import java.io.File;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 
 public class OrganisationDB {
@@ -176,20 +177,20 @@ public class OrganisationDB {
     }
 
     /**
-     * Méthode modélisant l'affichage des infos d'un membre issue de la table MEMBRE grâce à son ID
+     * Méthode modélisant l'affichage des infos encryptées d'un membre issue de la table MEMBRE grâce à son ID
      * @param url l'url de connexion SQLite
      * @param MemberID l'idée du membre
      * @return
      */
-    public static String fetchMemberData(String url, int MemberID){
+    public static String fetchMemberData(String url, int MemberID, String encryptionKey){
         String sql = "SELECT * "
                 + "FROM members WHERE members.id = ?";
 
         try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement pstmt  = conn.prepareStatement(sql)){
-
+            ++MemberID;
             // set the value
-            pstmt.setInt(1, MemberID);
+            pstmt.setInt(1, MemberID );
             //
             ResultSet rs  = pstmt.executeQuery();
 
@@ -203,9 +204,10 @@ public class OrganisationDB {
                         rs.getDate("registrationdate") + "\t" +
                         rs.getString("activity") + "\n");
             }
-            return stb.toString();
+            return EncryptionDecryptionUtil.encrypt(encryptionKey, stb.toString());
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            System.err.println("CANT RETURN DATA");
             return null;
         }
     }
@@ -239,16 +241,19 @@ public class OrganisationDB {
 
 
   
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NoSuchAlgorithmException {
         String url = connect("Tree Lovers");
         System.out.println(url);
         createMembersTable(url);
         //insertMemberData(url,100, "Esteban", "Neradeau", new Date(2021,9,15), "Streaming");
-        deleteMemberData(url, 100);
-        System.out.println(fetchMemberData(url, 2));
+        //deleteMemberData(url, 100);
+        String key =  EncryptionDecryptionUtil.generateKey();
+        String aa = fetchMemberData(url, 2, key);
+        System.out.println(aa);
+        System.out.println(EncryptionDecryptionUtil.decrypt(key , aa));
 
 
-        System.out.println(fetchMembersData(url));
+        //System.out.println(fetchMembersData(url));
 
         // Delete the DataBase after each use; At least for now.
 //        File data = new File("src\\com\\entity\\org\\TreeLovers.db");

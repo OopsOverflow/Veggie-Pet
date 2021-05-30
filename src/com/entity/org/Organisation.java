@@ -384,7 +384,7 @@ public class Organisation extends Entity {
             return true;
         }
         else{
-            System.err.println("[ORGANISATION] Error : " + member.getName() + " " + member.getFamilyName() + " could not be added to \"" + this.getName() + "\".\n");
+            System.err.println("[ORGANISATION] Error : " + member.getName() + " " + member.getFamilyName() + " Already a Member of \"" + this.getName() + "\".\n");
         }
 
         return false;
@@ -610,11 +610,11 @@ public class Organisation extends Entity {
      * @param member le membre en question
      * @return un String correspondant aux données d'un membre
      */
-    public String sendData(Member member){
+    public String sendData(Member member, String encryptionKey){
         // Get memeber ID
         ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(member);
         if (aux.getLeft()){
-            return OrganisationDB.fetchMemberData(DBURL, aux.getRight());
+            return OrganisationDB.fetchMemberData(DBURL, aux.getRight(), encryptionKey);
         }
         return null;
     }

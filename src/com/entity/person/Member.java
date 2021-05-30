@@ -1,12 +1,15 @@
 package com.entity.person;
 
+import com.entity.admin.Municipality;
 import com.entity.org.Organisation;
+import com.system.EncryptionDecryptionUtil;
 import com.system.Report;
 import com.veggie.Tree;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.*;
 import java.sql.Date;
@@ -18,7 +21,7 @@ public class Member extends Person {
     private float CurrentAccount;
     private ArrayList<ImmutablePair<LocalDate, Float>> contributionList = new ArrayList<>();
     private Deque<Tree> votes = new LinkedList<>();
-
+    private String  decryptKey;
     // Constructeur
     public Member(String name, String familyName, Date dateOfBirth, String address, Date lastRegistrationDate,
                   boolean payedContribution, ArrayList<Tree> treeNominations, float CurrentAccount) {
@@ -27,6 +30,12 @@ public class Member extends Person {
         this.payedContribution = payedContribution;
         this.treeNominations = treeNominations;
         this.CurrentAccount = CurrentAccount;
+        try{
+            this.decryptKey = EncryptionDecryptionUtil.generateKey();
+        }
+        catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
     }
 
     public Member(String name, String familyName, Date dateOfBirth, String address,
@@ -35,6 +44,12 @@ public class Member extends Person {
         this.lastRegistrationDate = lastRegistrationDate;
         this.payedContribution = payedContribution;
         this.CurrentAccount = CurrentAccount;
+        try{
+            this.decryptKey = EncryptionDecryptionUtil.generateKey();
+        }
+        catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
     }
 
     // Getter
@@ -179,6 +194,7 @@ public class Member extends Person {
                 "Visited Tree " + tree.getTreeID() +
                 "\n on " + date.toString() +
                 "\nLocation " + tree.getAddress());
+
     }
 
     /**
@@ -193,12 +209,24 @@ public class Member extends Person {
     }
 
     /**
-     * Méthode qui permet à un membre de voir les données qu'a l'organisation
+     * Méthode qui permet à un membre de voir les données cryptées qu'a l'organisation
      * @param organisation le membre demande les infos qu'a 'organisation' a son sujet
      */
-    private String getMyData(Organisation organisation){
-        String myData = organisation.sendData(this);
+    public String getMyData(Organisation organisation){
+        String myData = organisation.sendData(this, decryptKey);
+        System.out.println(myData);
         return myData;
+    }
+
+    private String decryptData(Organisation organisation){
+        try{
+            String str = getMyData(organisation);
+            return EncryptionDecryptionUtil.decrypt(decryptKey, str);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Cannot Decrypt Data. Check your key.");
+            return null;
+        }
     }
 
     /**
@@ -228,48 +256,26 @@ public class Member extends Person {
     public static void main(String[] args){
         Member m1 = new Member("Houssem", "Mahmoud", new Date(1998,04,30), "Somewhere not far from Tunis",
                 new Date(2021,05,23), false, 5000);
-        Member m2 = new Member("Houssem", "Mahmoud", new Date(1998,03,30), "Somewhere not far from Tunis",
+        Member m2 = new Member("Aaa", "Mahmoud", new Date(1998,03,30), "Somewhere not far from Tunis",
                 new Date(2021,04,23), false, 5000);
 
-        Tree t1 = new Tree(147179, "Marronnier", 150, 15, "hippocastanum",
-                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
-                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
 
-        Tree t2 = new Tree(1, "Marronnier", 150, 15, "hippocastanum",
-                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
-                new Float[]{(float)48.8632712288,(float)2.39435673087}, true);
+        Municipality paris = new Municipality("Paris", "SomeWhere");
+        Organisation TreeLovers = new Organisation("Tree Lovers", 10000.0f, paris, m1, m2);
 
-        Tree t3 = new Tree(2, "Marronnier", 150, 15, "hippocastanum",
-                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
-                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
+        System.out.println(m1.decryptData(TreeLovers));
 
-        Tree t4 = new Tree(3, "Marronnier", 150, 15, "hippocastanum",
-                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
-                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
-
-        Tree t5 = new Tree(4, "Marronnier", 150, 15, "hippocastanum",
-                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
-                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
-
-        Tree t6 = new Tree(5, "Marronnier", 150, 15, "hippocastanum",
-                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
-                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
-
-        Tree t7 = new Tree(6, "Marronnier", 150, 15, "hippocastanum",
-                "Aesculus", "Adulte", "CIMETIERE DU PERE LACHAISE / AVENUE DES THUYAS / DIV 86",
-                new Float[]{(float)48.8632712288,(float)2.39435673087}, false);
-
-        System.out.println(m1.equals(m2));
-        System.out.println(m1.toString());
-
-        System.out.println(m1.toString());
-
-        System.out.println(m1.getContributionList());
-
-        m1.vote(t1,t2,t3,t4,t5);
-
-        m1.vote(t6,t7);
-        System.out.println(m1.toString());
+//        System.out.println(m1.equals(m2));
+//        System.out.println(m1.toString());
+//
+//        System.out.println(m1.toString());
+//
+//        System.out.println(m1.getContributionList());
+//
+//        m1.vote(t1,t2,t3,t4,t5);
+//
+//        m1.vote(t6,t7);
+//        System.out.println(m1.toString());
 
         //m1.toVolunteerOn(t1);
 

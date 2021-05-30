@@ -5,17 +5,15 @@ import com.entity.admin.Municipality;
 import com.entity.org.Organisation;
 import com.entity.person.Member;
 import com.entity.person.Person;
-import com.system.OrganisationDB;
 
 import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws Exception {
 
         // Prepare to Parse the Data
         String pathToFile = "";
@@ -140,7 +138,7 @@ public class Main {
         File datab = new File("src\\com\\entity\\org\\TreeLovers.db");
         File datab2 = new File("src\\com\\entity\\org\\PETA.db");
         data.delete();
-        //datab.delete();
+        datab.delete();
         datab2.delete();
 
         System.out.println(fileName);
