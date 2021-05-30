@@ -16,13 +16,13 @@ public class FileManager {
      */
     public static File createFile(String fileName) {
         try {
-            File myObj = new File(fileName + ".txt");
+            File myObj = new File("src\\com\\entity\\org\\" + fileName + ".txt");
             if (myObj.createNewFile()) {
                 System.out.println("Record Successfully Created");
                 return myObj;
             } else {
                 System.out.println("Connecting to Already existing Record ...");
-                return new File(fileName + ".txt");
+                return new File("src\\com\\entity\\org\\" + fileName + ".txt");
             }
         } catch (IOException e) {
             System.err.println("An error occurred.");
@@ -40,7 +40,7 @@ public class FileManager {
      * @return un booléen modélisant la réussite de l'opération
      */
     public static boolean writeToRecord(Entity origin, File record, String typeOfOperation, float amount, float budget){
-        try(FileWriter writer = new FileWriter(record.getName(),true)){
+        try(FileWriter writer = new FileWriter("src\\com\\entity\\org\\" + record.getName(),true)){
             writer.write(String.format("[%s]\nNEW FINANCIAL OPERATION==========\n",origin.getName()));
             writer.write("\tDate : " + LocalDateTime.now() + "\n");
             writer.write("\tType : " + typeOfOperation + "\n");

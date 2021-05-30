@@ -9,10 +9,12 @@ import com.entity.person.Person;
 import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
+
     public static void main(String[] args) throws Exception {
 
         // Prepare to Parse the Data
@@ -40,7 +42,9 @@ public class Main {
             pathToFile = args[0];
         }
 
+        System.out.println("CSV File Path ");
         String fileName = new File(pathToFile).getAbsolutePath();
+        System.out.println(fileName + "\n");
 
         // Parse Data Into Array
         ArrayList<Tree> trees = ParserCSV.parseDataFromCSVFile(fileName);
@@ -60,23 +64,23 @@ public class Main {
         Tree tree8 = paris.getTrees().get(7);
 
         // Create Members
-        Member m1 = new Member("Andrea", "Cappo", new Date(1998, 04, 30), "Palermo",
-                new Date(2021, 05, 23), false, 5000);
+        Member m1 = new Member("Andrea", "Cappo", new Date(1998, 4, 30), "Palermo",
+                new Date(2021, 5, 23), false, 5000);
 
         Member m2 = new Member("Pablo", "Elenore", new Date(2001, 10, 29), "Milan",
-                new Date(2021, 05, 23), false, 5000);
+                new Date(2021, 5, 23), false, 5000);
 
         Member m3 = new Member("Juan", "DeJea", new Date(1995, 10, 28), "Mexico",
-                new Date(2021, 05, 24), false, 10000);
+                new Date(2021, 5, 24), false, 10000);
 
-        Member m4 = new Member("Stan", "Lee", new Date(1999, 05, 01), "Antony",
-                new Date(2021, 05, 25), false, 15000);
+        Member m4 = new Member("Stan", "Lee", new Date(1999, 5, 1), "Antony",
+                new Date(2021, 5, 25), false, 15000);
 
-        Member m5 = new Member("Tarik", "Doha", new Date(1996, 05, 01), "Dubai",
-                new Date(2021, 05, 25), false, 15000);
+        Member m5 = new Member("Tarik", "Doha", new Date(1996, 5, 1), "Dubai",
+                new Date(2021, 5, 25), false, 15000);
 
         // Create Person
-        Person p = new Person("Ice", "Cube", new Date(1970, 03, 15), "San Marino");
+        Person p = new Person("Ice", "Cube", new Date(1970, 3, 15), "San Marino");
 
         // Create Organisations
         System.out.println("New Organisation : Creating Data Bases & Report Files ...");
@@ -148,18 +152,29 @@ public class Main {
         }*/
 
 
+        System.out.println();
+        System.out.println("----- Tiding Things up ... ------");
+        TimeUnit.SECONDS.sleep(2);
 
+        do {
+            System.out.println("Would you Like to Delete the Created Files & Data Bases [Yes/No]?");
+            Scanner sc = new Scanner(System.in);
+            choice = sc.next().toLowerCase();
+        }while (!(choice.equals("yes") || choice.equals("no")));
 
+        if (choice.equals("yes")) {
+            File data = new File("src\\com\\entity\\org\\TreeLoversFinancialRecord2021.txt");
+            File datab = new File("src\\com\\entity\\org\\TreeLovers.db");
+            File datab2 = new File("src\\com\\entity\\org\\PETA.db");
+            File data2 = new File("src\\com\\entity\\org\\PETAFinancialRecord2021.txt");
+            data.delete();
+            data2.delete();
+            datab.delete();
+            datab2.delete();
+        }
+        else
+            return;
 
-
-        File data = new File("TreeLoversFinancialRecord2021.txt");
-        File datab = new File("src\\com\\entity\\org\\TreeLovers.db");
-        File datab2 = new File("src\\com\\entity\\org\\PETA.db");
-        data.delete();
-        datab.delete();
-        datab2.delete();
-
-        System.out.println(fileName);
     }
 
 }
