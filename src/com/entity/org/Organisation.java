@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 public class Organisation extends Entity {
     private Float budget;
-    private static int numMembers = 0;
+    private static int numMembers = 1;
     private String DBURL;
     ArrayList<Entity> donorsList = new ArrayList<>();
     Municipality municipality;
@@ -303,7 +303,7 @@ public class Organisation extends Entity {
     public void addActivity(Member member, Report report){
         ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(member);
         if (aux.getLeft())
-            OrganisationDB.addMemberActivity(DBURL, aux.getRight(), report.toString());
+            OrganisationDB.addMemberActivity(DBURL, aux.getRight() + 1, report.toString());
         else
             System.out.println("ERROR : NOT A MEMBER OF THE ORGANISATION, REPORT NOT SUBMITTED");
     }
@@ -578,14 +578,12 @@ public class Organisation extends Entity {
                     }
                 }
                 return true;
-                //@TODO : Ajouter les notifications
             }
             else{
                 System.out.println(String.format("[ORGANISATION] Visit from [%s] rejected for the tree \'" + t.getTreeID() + "\'. " +
                         "Tree already been reserved", m.getName()));
                 //System.out.println("Here's a list of remarkable tree not visited for a while : " + listRemarkableTreeNotVisitedForAWhile);
                 return false;
-                //@TODO : Ajouter les notifications
             }
         }
         else{

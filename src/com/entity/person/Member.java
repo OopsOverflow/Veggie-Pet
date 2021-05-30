@@ -212,9 +212,7 @@ public class Member extends Person {
      * @param organisation le membre demande les infos qu'a 'organisation' a son sujet
      */
     public String getMyData(Organisation organisation){
-        String myData = organisation.sendData(this, decryptKey);
-        System.out.println(myData);
-        return myData;
+        return organisation.sendData(this, decryptKey);
     }
 
     private String decryptData(Organisation organisation){
