@@ -43,6 +43,8 @@ public class Main {
         }
 
         System.out.println("CSV File Path ");
+        System.out.println("\n\t\t<=== Informations liées à la base de données ===>\n");
+
         String fileName = new File(pathToFile).getAbsolutePath();
         System.out.println(fileName + "\n");
 
@@ -88,8 +90,12 @@ public class Main {
         Organisation TreeLovers = new Organisation("Tree Lovers", 10000.0f, paris, m1, m2, m3, m4, m5);
         Organisation peta = new Organisation("PETA", 5000000.0f, paris);
 
-        TimeUnit.SECONDS.sleep(1);
-        System.out.println("\nContributions and Financial Operations");
+        System.out.println("\n\t\t<=== End ===>\n\n");
+        /*for(int i = 0 ; i < 10 ; i++){
+            TimeUnit.MILLISECONDS.sleep(500);
+            System.out.print(".   ");
+        }*/
+        System.out.println("\n\t\t<=== Contributions and Financial Operations ===>\n");
         TimeUnit.SECONDS.sleep(1);
         // Paying Contributions
         m1.payContribution(TreeLovers, 100);
@@ -98,12 +104,14 @@ public class Main {
         m4.payContribution(TreeLovers, 100);
         m5.payContribution(TreeLovers, 100);
 
+        System.out.print("\n");
 
         // Paying Bills
         TreeLovers.payBill(5000);
+        System.out.print("\n");
         TimeUnit.SECONDS.sleep(1);
         // Asking for donations
-        System.out.println("Asking For Donations...");
+        System.out.println("\tAsking For Donations...");
         TreeLovers.addDonor(peta);
         TreeLovers.addDonor(p);
         TreeLovers.askForDonations();
