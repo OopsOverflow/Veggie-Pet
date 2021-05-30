@@ -169,8 +169,16 @@ public class Member extends Person {
         }
     }
 
-    public void submitReport(Report r){
-
+    /**
+     * Submits activity report after a tree visit to the organisation
+     * @param tree Visited Tree
+     * @param date date of visit
+     */
+    public void submitReport(Tree tree, Date date){
+        Report report = new Report(tree, this, "Activity : Visit Report", LocalDate.now(),
+                "Visited Tree " + tree.getTreeID() +
+                "\n on " + date.toString() +
+                "\nLocation " + tree.getAddress());
     }
 
     /**
@@ -188,11 +196,9 @@ public class Member extends Person {
      * Méthode qui permet à un membre de voir les données qu'a l'organisation
      * @param organisation le membre demande les infos qu'a 'organisation' a son sujet
      */
-    protected void getMyData(Organisation organisation){
-        // fonction qui vérifie que le membre en question est bien présent dans l'organisation
-        //probablement une fonction dans la classe organisation telle que :
-        // Organisation.isMember(Member m) -> test si le Member m est dans la liste des membres.
-
+    private String getMyData(Organisation organisation){
+        String myData = organisation.sendData(this);
+        return myData;
     }
 
     /**

@@ -89,7 +89,6 @@ public class Report {
         // If the author of the report is a member, prints this
         if (tree != null) {
             reportSTB.append("\tTree ID : " + tree.getTreeID() + "\n");
-            reportSTB.append("\tAuthor : " + member.getName() + " " + member.getFamilyName() + "\n");
             reportSTB.append("\tContent : \n" + content + "\n");
         }
 

@@ -124,6 +124,26 @@ public class OrganisationDB {
         }
     }
 
+    public static void addMemberActivity(String url, int memberID, String activity) {
+        String sql = "UPDATE members SET activity = ? "
+                + "WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // Get the old data and append to it
+            String newActivity = OrganisationDB.fetchMemberActivity(url, memberID) + activity;
+
+            pstmt.setString(1, newActivity);
+            pstmt.setInt(2, memberID);
+            // update
+            pstmt.executeUpdate();
+            System.out.println("Activity was successfully uploaded.");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     /**
      * Méthode permettant d'afficher tous les membres
      * @param url l'url de la connexion SQLite
@@ -182,6 +202,30 @@ public class OrganisationDB {
                         rs.getDate("dateofbirth") + "\t" +
                         rs.getDate("registrationdate") + "\t" +
                         rs.getString("activity") + "\n");
+            }
+            return stb.toString();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public static String fetchMemberActivity(String url, int MemberID){
+        String sql = "SELECT activity "
+                + "FROM members WHERE members.id = ?";
+
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt  = conn.prepareStatement(sql)){
+
+            // set the value
+            pstmt.setInt(1, MemberID);
+            //
+            ResultSet rs  = pstmt.executeQuery();
+
+            StringBuilder stb = new StringBuilder();
+            // loop through the result set
+            while (rs.next()) {
+                stb.append(rs.getString("activity")).append("\n");
             }
             return stb.toString();
         } catch (SQLException e) {

@@ -63,9 +63,7 @@ public class Municipality extends Entity {
         return address;
     }
 
-    public ArrayList<Tree> getTrees() {
-        return (ArrayList<Tree>) trees.clone();
-    }
+
 
 
     /**

@@ -1,5 +1,6 @@
 package com.entity;
 
+import com.entity.admin.GreenSpaces;
 import com.entity.org.Organisation;
 
 public class Entity {
@@ -58,5 +59,9 @@ public class Entity {
             letterBox.append(notification);
         else
             System.out.println("Notification Rejected, Already Received");
+    }
+
+    public void subscribeToNewsLetter(GreenSpaces gs){
+        gs.addToNewsLetter(this);
     }
 }

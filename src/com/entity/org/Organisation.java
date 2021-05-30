@@ -287,6 +287,14 @@ public class Organisation extends Entity {
         }
     }
 
+    public void addActivity(Member member, Report report){
+        ImmutablePair<Boolean, Integer> aux = checkMemberInMemberList(member);
+        if (aux.getLeft())
+            OrganisationDB.addMemberActivity(DBURL, aux.getRight(), report.toString());
+        else
+            System.out.println("ERROR : NOT A MEMBER OF THE ORGANISATION, REPORT NOT SUBMITTED");
+    }
+
     /**
      * Permet d'obtenir le nom des membres dans la liste. Ces noms sont ordonés dans un StringBuilder pour l'affichage
      * dans la méthode toString()
@@ -459,24 +467,6 @@ public class Organisation extends Entity {
         return false;
     }
 
-//    private boolean writeToRecord(File record, String typeOfOperation, float amount){
-//        try(FileWriter writer = new FileWriter(financialRecord.getName(),true)){
-//            writer.write(String.format("[%s]\nNEW FINANCIAL OPERATION==========\n",this.getName()));
-//            writer.write("\tDate : " + LocalDateTime.now() + "\n");
-//            writer.write("\tType : " + typeOfOperation + "\n");
-//            writer.write("\tAmount : " + amount + "\n");
-//            writer.write("\tNew Budget : " + budget + "\n"); // Change to budget must be done before
-//            writer.write("END -----------------\n");
-//
-//            return true;
-//        }
-//        catch (IOException e) {
-//            System.err.println("I/O ERROR : CAN'T WRITE TO FILE" + record.getAbsolutePath());
-//            e.printStackTrace();
-//            return false;
-//        }
-//
-//    }
 
     /**
      * Méthode modélisant une demande de donation

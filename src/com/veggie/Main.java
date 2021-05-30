@@ -118,7 +118,7 @@ public class Main {
 
         // Trees
         System.out.println("Manipulating Trees & Notification System");
-        parisGS.addToNewsLetter(TreeLovers);
+        TreeLovers.subscribeToNewsLetter(parisGS);
         TimeUnit.SECONDS.sleep(1);
         System.out.println("----VOTING 🌲-----");
         TimeUnit.SECONDS.sleep(1);
