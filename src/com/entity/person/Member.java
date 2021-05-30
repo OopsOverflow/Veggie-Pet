@@ -186,6 +186,7 @@ public class Member extends Person {
     /**
      * Submits activity report after a tree visit to the organisation
      * @param tree Visited Tree
+     * @param organisation the organisation
      * @param date date of visit
      */
     public void submitReport(Tree tree, Date date, Organisation organisation){
