@@ -67,8 +67,8 @@ public class EncryptionDecryptionUtil {
 
     /**
      *  Generates 256 Bit - Keys for the encryption
-     * @return String : Key
-     * @throws NoSuchAlgorithmException
+     * @return un String qui contient la key
+     * @throws NoSuchAlgorithmException l'exception
      */
     public static String generateKey() throws NoSuchAlgorithmException {
         KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");

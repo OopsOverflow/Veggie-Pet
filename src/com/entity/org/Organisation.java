@@ -564,7 +564,7 @@ public class Organisation extends Entity {
      * fait l'objet de visite depuis longtemps
      * @param m le membre qui fait la demande de visite
      * @param t l'arbre associé a la demande de visite
-     * @return
+     * @return un booléen modélisant l'autorisation ou non de la visite du membre.
      */
     public boolean allowOrNotVisit(Member m, Tree t){
         if(t.isRemarkable()){
@@ -632,6 +632,7 @@ public class Organisation extends Entity {
     /**
      * Méthode modélisant l'envoi des données d'un membre
      * @param member le membre en question
+     * @param encryptionKey la clé d'encryptage
      * @return un String correspondant aux données d'un membre
      */
     public String sendData(Member member, String encryptionKey){

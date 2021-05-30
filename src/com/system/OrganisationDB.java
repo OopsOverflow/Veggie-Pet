@@ -148,7 +148,7 @@ public class OrganisationDB {
     /**
      * Méthode permettant d'afficher tous les membres
      * @param url l'url de la connexion SQLite
-     * @return
+     * @return un String qui contient l'affichage des membres de la base de données
      */
     public static String fetchMembersData(String url){
         String sql = "SELECT * FROM members";
@@ -180,7 +180,8 @@ public class OrganisationDB {
      * Méthode modélisant l'affichage des infos encryptées d'un membre issue de la table MEMBRE grâce à son ID
      * @param url l'url de connexion SQLite
      * @param MemberID l'idée du membre
-     * @return
+     * @param encryptionKey la clé d'encryptage
+     * @return un String qui contient les infos
      */
     public static String fetchMemberData(String url, int MemberID, String encryptionKey){
         String sql = "SELECT * "

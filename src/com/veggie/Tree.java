@@ -171,8 +171,6 @@ public class Tree {
      * Méthode static qui permet d'avoir un comparateur qui opère sur la date d'un arbre.
      * Grâce à cela, on pourra comparer deux arbres avec leurs dates de dernières visites.
      * Utile dans la classe ORGANISATION notamment
-     * @return soit 0 soit 1 soit -1 selon si les dates sont respectivement égales, o1 plus jeune que o2,
-     * o1 plus vieille que o2. o1 la date de l'arbre 1 et o2 la date de l'arbre 2
      */
     public static Comparator<Tree> ComparatorTree = new Comparator<Tree>() {
         @Override

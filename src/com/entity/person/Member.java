@@ -133,6 +133,7 @@ public class Member extends Person {
     /**
      * Méthode modélisant le paiement de la contribution du membre.
      * @param amount le montant de la contribution
+     * @param org l'organisation
      * @return un booléen pour savoir la méthode s'est bien exécuté
      */
     public boolean payContribution(Organisation org, float amount){
@@ -155,8 +156,7 @@ public class Member extends Person {
      * Méthode modélisant le vote d'un membre pour un arbre. Si le membre vote pour plus de 5 arbres, il lui est
      * demandé s'il veut oui ou non validé son changement de vote, car seulement 5 votes sont possibles pour un membre.
      * Si le membre dit oui la file est actualisée et le vote le plus ancien disparait au profit du nouveau.
-     * @param trees
-     * @return
+     * @param trees l'énumeration d'arbres
      */
     public void vote(Tree ...trees){
         for(Tree t : trees){
@@ -210,6 +210,7 @@ public class Member extends Person {
     /**
      * Méthode qui permet à un membre de voir les données cryptées qu'a l'organisation
      * @param organisation le membre demande les infos qu'a 'organisation' a son sujet
+     * @return un String avec les données
      */
     public String getMyData(Organisation organisation){
         String myData = organisation.sendData(this, decryptKey);
@@ -217,6 +218,11 @@ public class Member extends Person {
         return myData;
     }
 
+    /**
+     * Méthode qui permet de decrypter les data
+     * @param organisation l'organisation concernées par le decryptage de données
+     * @return un String qui contient les data
+     */
     private String decryptData(Organisation organisation){
         try{
             String str = getMyData(organisation);

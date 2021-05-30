@@ -21,7 +21,7 @@ public class Municipality extends Entity {
 
     /**
      * Permet d'obtenir un clone de la liste d'arbre de la municipalité
-     * @return
+     * @return un ArrayList d'arbre clone de l'ArrayList d'arbre de la municipalité
      */
     public ArrayList<Tree> getTrees() {
         return (ArrayList<Tree>) trees.clone();
