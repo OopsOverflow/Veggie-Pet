@@ -235,30 +235,5 @@ public class OrganisationDB {
             return null;
         }
     }
-    
-    //@TODO : Select member data and activity, convert it to a string and encrypt it.
-    // TODO: 28/05/2021 add AES encryption 
 
-
-  
-    public static void main(String[] args) throws NoSuchAlgorithmException {
-        String url = connect("Tree Lovers");
-        System.out.println(url);
-        createMembersTable(url);
-        //insertMemberData(url,100, "Esteban", "Neradeau", new Date(2021,9,15), "Streaming");
-        //deleteMemberData(url, 100);
-        String key =  EncryptionDecryptionUtil.generateKey();
-        String aa = fetchMemberData(url, 2, key);
-        System.out.println(aa);
-        System.out.println(EncryptionDecryptionUtil.decrypt(key , aa));
-
-
-        //System.out.println(fetchMembersData(url));
-
-        // Delete the DataBase after each use; At least for now.
-//        File data = new File("src\\com\\entity\\org\\TreeLovers.db");
-//        data.delete();
-
-
-    }
 }
