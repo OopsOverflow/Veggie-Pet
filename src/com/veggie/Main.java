@@ -43,7 +43,7 @@ public class Main {
         }
 
         System.out.println("CSV File Path ");
-        System.out.println("\n\t\t<=== Informations liées à la base de données ===>\n");
+        System.out.println("\n\t\t<=== Création d'objet et Base de données ===>\n");
 
         String fileName = new File(pathToFile).getAbsolutePath();
         System.out.println(fileName + "\n");
@@ -66,6 +66,11 @@ public class Main {
         Tree tree8 = paris.getTrees().get(7);
 
         // Create Members
+        System.out.print("Création de membres ");
+        for(int i = 0 ; i < 5 ; i++) {
+            TimeUnit.SECONDS.sleep(1);
+            System.out.print(" .");
+        }
         Member m1 = new Member("Andrea", "Cappo", new Date(1998, 4, 30), "Palermo",
                 new Date(2021, 5, 23), false, 5000);
 
@@ -85,24 +90,39 @@ public class Main {
         Person p = new Person("Ice", "Cube", new Date(1970, 3, 15), "San Marino");
 
         // Create Organisations
-        System.out.println("New Organisation : Creating Data Bases & Report Files ...");
-        TimeUnit.SECONDS.sleep(2);
+        System.out.print("\nAssociation : Creating Data Bases & Report Files");
+        for(int i = 0 ; i < 5 ; i++) {
+            TimeUnit.SECONDS.sleep(1);
+            System.out.print(" .");
+        }
+        System.out.print("\n");
         Organisation TreeLovers = new Organisation("Tree Lovers", 10000.0f, paris, m1, m2, m3, m4, m5);
         Organisation peta = new Organisation("PETA", 5000000.0f, paris);
-
-        System.out.println("\n\t\t<=== End ===>\n\n");
-        /*for(int i = 0 ; i < 10 ; i++){
-            TimeUnit.MILLISECONDS.sleep(500);
-            System.out.print(".   ");
-        }*/
-        System.out.println("\n\t\t<=== Contributions and Financial Operations ===>\n");
         TimeUnit.SECONDS.sleep(1);
+
+        System.out.println("\n\t\t<=== End ===>\n");
+        System.out.print("\t\t");
+        for(int i = 0 ; i < 10 ; i++){
+            TimeUnit.MILLISECONDS.sleep(500);
+            System.out.print(".  ");
+        }
+        TimeUnit.SECONDS.sleep(2);
+        System.out.print("\n");
+        TimeUnit.SECONDS.sleep(2);
+        System.out.print("\n");
+        System.out.println("\t\t<=== Contributions and Financial Operations ===>\n");
+        TimeUnit.SECONDS.sleep(3);
         // Paying Contributions
         m1.payContribution(TreeLovers, 100);
+        TimeUnit.SECONDS.sleep(2);
         m2.payContribution(TreeLovers, 100);
+        TimeUnit.SECONDS.sleep(2);
         m3.payContribution(TreeLovers, 100);
+        TimeUnit.SECONDS.sleep(2);
         m4.payContribution(TreeLovers, 100);
+        TimeUnit.SECONDS.sleep(2);
         m5.payContribution(TreeLovers, 100);
+        TimeUnit.SECONDS.sleep(2);
 
         System.out.print("\n");
 
@@ -111,38 +131,52 @@ public class Main {
         System.out.print("\n");
         TimeUnit.SECONDS.sleep(1);
         // Asking for donations
-        System.out.println("\tAsking For Donations...");
+        System.out.println("\tAsking For Donations...\n");
+        TimeUnit.SECONDS.sleep(3);
         TreeLovers.addDonor(peta);
         TreeLovers.addDonor(p);
         TreeLovers.askForDonations();
-        TimeUnit.SECONDS.sleep(1);
-        System.out.println("Verify Reception of Notifications");
-        System.out.println("PETA Notification Box");
+        TimeUnit.SECONDS.sleep(2);
+        System.out.println("\tAffichage de la boîte de reception de PETA (Exemple) \n");
+        TimeUnit.SECONDS.sleep(2);
+        System.out.println("\t\tPETA Notification Box");
+        TimeUnit.SECONDS.sleep(2);
         System.out.println(peta.getLetterBox().toString());
 
+        System.out.print("\t\t");
 
-
-
-//        System.out.println("Tree Lovers Members");
-//        System.out.println(TreeLovers.getMembersList());
+        for(int i = 0 ; i < 10 ; i++){
+            TimeUnit.MILLISECONDS.sleep(500);
+            System.out.print(".  ");
+        }
 
         // Trees
-        System.out.println("Manipulating Trees & Notification System");
+        System.out.println("\n\n\t\t<=== Manipulating Trees & Notification System ===>\n");
+        TimeUnit.SECONDS.sleep(3);
         TreeLovers.subscribeToNewsLetter(parisGS);
-        TimeUnit.SECONDS.sleep(1);
-        System.out.println("----VOTING 🌲-----");
-        TimeUnit.SECONDS.sleep(1);
+        TimeUnit.SECONDS.sleep(2);
+        System.out.println("\n\t\t\t----VOTING 🌲-----");
+        TimeUnit.SECONDS.sleep(2);
+        System.out.println("\n\t[Andrea] vote pour les arbres 1, 2, 3, 4, 5 et 8");
         m1.vote(tree1, tree2, tree3, tree4, tree5, tree8);
+        TimeUnit.SECONDS.sleep(2);
+        System.out.println(String.format("\n\t[%s] vote pour les arbres 1, 2, 3, 4, 5", m2.getName()));
         m2.vote(tree1, tree2, tree3, tree4, tree5);
+        TimeUnit.SECONDS.sleep(2);
+        System.out.println(String.format("\n\t[%s] vote pour les arbres 1, 2, 4, 6, 8", m3.getName()));
         m3.vote(tree1, tree2, tree6, tree4, tree8);
+        TimeUnit.SECONDS.sleep(2);
+        System.out.println(String.format("\n\t[%s] vote pour les arbres 1, 2, 4, 6, 8", m4.getName()));
         m4.vote(tree1, tree2, tree6, tree4, tree8);
+        TimeUnit.SECONDS.sleep(2);
+        System.out.println(String.format("\n\t[%s] vote pour les arbres 1, 7, 3, 8, 2", m5.getName()));
         m5.vote(tree1, tree7, tree3, tree8, tree2);
+        TimeUnit.SECONDS.sleep(2);
 
 
         // Visits
-        System.out.println("\n\n\t\t<===== Manipulating Visit function =====>");
         TimeUnit.SECONDS.sleep(2);
-        System.out.println("\n\n\t\t---- VISIT 🌲 ----");
+        System.out.println("\n\n\t\t\t---- VISIT 🌲 ----");
         TimeUnit.SECONDS.sleep(2);
         TreeLovers.doAllVisitFx();
 
